@@ -57,7 +57,7 @@ export interface Product {
 export type OrderType = 'online_delivery' | 'online_pickup' | 'pos_walkin';
 export type OrderStatus = 'pending' | 'confirmed' | 'arranging' | 'ready_for_pickup' | 'out_for_delivery' | 'delivered' | 'cancelled';
 export type PaymentStatus = 'pending' | 'paid' | 'refunded' | 'failed';
-export type PaymentMethod = 'cash' | 'card' | 'digital_wallet' | 'cod';
+export type PaymentMethod = 'cash' | 'card' | 'digital_wallet' | 'cod' | 'qrph' | 'gcash' | 'maya';
 export type OrderSource = 'web' | 'pos';
 
 export interface OrderItem {
