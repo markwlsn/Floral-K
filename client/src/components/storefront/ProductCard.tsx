@@ -1,12 +1,15 @@
 import React from 'react';
 import { Product } from '../../types';
 import { useCart } from '../../context/CartContext';
-import { ShoppingBag, Sparkles, Eye, Check } from 'lucide-react';
+import { formatPrice } from '../../utils/format';
+import { ShoppingBag, Sparkles, Check } from 'lucide-react';
 
 interface ProductCardProps {
   product: Product;
   onSelect: (product: Product) => void;
 }
+
+const FALLBACK_FLORAL_IMAGE = 'https://images.unsplash.com/photo-1518709268805-4e9042af9f23?auto=format&fit=crop&w=800&q=80';
 
 export const ProductCard: React.FC<ProductCardProps> = ({ product, onSelect }) => {
   const { addToCart, items } = useCart();
@@ -26,9 +29,9 @@ export const ProductCard: React.FC<ProductCardProps> = ({ product, onSelect }) =
     ? Math.round(product.compare_at_price - product.price)
     : 0;
 
-  const primaryImage = product.images && product.images.length > 0
+  const primaryImage = product.images && product.images.length > 0 && product.images[0]
     ? product.images[0]
-    : 'https://images.unsplash.com/photo-1518709268805-4e9042af9f23?auto=format&fit=crop&w=800&q=80';
+    : FALLBACK_FLORAL_IMAGE;
 
   return (
     <div
@@ -40,6 +43,12 @@ export const ProductCard: React.FC<ProductCardProps> = ({ product, onSelect }) =
         <img
           src={primaryImage}
           alt={product.name}
+          onError={(e) => {
+            const target = e.target as HTMLImageElement;
+            if (target.src !== FALLBACK_FLORAL_IMAGE) {
+              target.src = FALLBACK_FLORAL_IMAGE;
+            }
+          }}
           className="w-full h-full object-cover group-hover:scale-104 transition-transform duration-500 ease-out"
           loading="lazy"
         />
@@ -53,7 +62,7 @@ export const ProductCard: React.FC<ProductCardProps> = ({ product, onSelect }) =
           )}
           {savings > 0 && (
             <span className="bg-neutral-100/90 backdrop-blur-md text-neutral-800 font-medium text-[10px] tracking-wide uppercase px-2 py-0.5 rounded-full border border-neutral-200 shadow-xs">
-              Save ${savings}
+              Save {formatPrice(savings)}
             </span>
           )}
         </div>
@@ -94,11 +103,11 @@ export const ProductCard: React.FC<ProductCardProps> = ({ product, onSelect }) =
         <div className="pt-3 border-t border-neutral-100 flex items-center justify-between gap-3">
           <div className="flex items-baseline gap-1.5">
             <span className="font-semibold text-base text-[#1d1d1f]">
-              ${product.price.toFixed(2)}
+              {formatPrice(product.price)}
             </span>
             {product.compare_at_price && product.compare_at_price > product.price && (
               <span className="text-xs text-neutral-400 line-through">
-                ${product.compare_at_price.toFixed(2)}
+                {formatPrice(product.compare_at_price)}
               </span>
             )}
           </div>
