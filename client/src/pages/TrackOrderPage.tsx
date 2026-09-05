@@ -1,6 +1,7 @@
 import React, { useState, useEffect } from 'react';
-import { Search, Compass, Package, CheckCircle2, Clock, Truck, Gift, AlertCircle, MapPin, Navigation, ShieldCheck } from 'lucide-react';
+import { Search, Compass, Package, CheckCircle2, Clock, Truck, Gift, AlertCircle, MapPin, Navigation, ShieldCheck, Building2, Store } from 'lucide-react';
 import type { Order } from '../types';
+import { formatPrice } from '../utils/format';
 
 interface TrackOrderPageProps {
   initialOrderNumber?: string | null;
@@ -47,12 +48,14 @@ export const TrackOrderPage: React.FC<TrackOrderPageProps> = ({ initialOrderNumb
     fetchTracking(orderNumberInput);
   };
 
+  const isPickup = order?.order_type === 'online_pickup';
+
   const steps = [
     { key: 'confirmed', label: 'Order Confirmed', desc: 'Payment verified & stems allocated', icon: <CheckCircle2 className="w-4 h-4" /> },
     { key: 'arranging', label: 'Florist Arranging', desc: 'Handcrafted in studio with fresh cuts', icon: <Package className="w-4 h-4" /> },
-    { key: 'ready', label: 'Ready for Dispatch', desc: 'Chilled packaging & card tied', icon: <Clock className="w-4 h-4" /> },
-    { key: 'out_for_delivery', label: 'Out for Courier Delivery', desc: 'Temperature-controlled transport', icon: <Truck className="w-4 h-4" /> },
-    { key: 'delivered', label: 'Delivered', desc: 'Handed to recipient with care', icon: <Gift className="w-4 h-4" /> },
+    { key: 'ready', label: isPickup ? 'Ready for Pickup' : 'Ready for Dispatch', desc: isPickup ? 'Held in atelier chilled showcase' : 'Chilled packaging & wax seal tied', icon: <Clock className="w-4 h-4" /> },
+    { key: 'out_for_delivery', label: isPickup ? 'Pickup Window Active' : 'Out for Courier Delivery', desc: isPickup ? 'Awaiting customer arrival at atelier' : 'Temperature-controlled transport', icon: isPickup ? <Store className="w-4 h-4" /> : <Truck className="w-4 h-4" /> },
+    { key: 'delivered', label: isPickup ? 'Handed to Customer' : 'Delivered to Recipient', desc: 'Bouquet handoff verified', icon: <Gift className="w-4 h-4" /> },
   ];
 
   const getStepIndex = (status: string) => {
@@ -83,13 +86,13 @@ export const TrackOrderPage: React.FC<TrackOrderPageProps> = ({ initialOrderNumb
         <div className="text-center space-y-3">
           <div className="inline-flex items-center gap-1.5 px-3 py-1 rounded-full bg-neutral-100 text-neutral-800 text-[11px] font-medium">
             <Compass className="w-3.5 h-3.5 text-neutral-600" />
-            <span>Real-Time Atelier Dispatch Tracking</span>
+            <span>Real-Time Atelier Dispatch Tracking • Metro Manila</span>
           </div>
           <h1 className="text-3xl sm:text-4xl font-semibold tracking-tight text-[#1d1d1f]">
-            Track Your Floral Delivery
+            Track Your Floral Order
           </h1>
           <p className="text-xs sm:text-sm text-[#86868b] max-w-md mx-auto">
-            Enter your order reference number to follow your arrangement from florist stem cutting to doorstep presentation.
+            Enter your order reference number to follow your arrangement from florist stem cutting to doorstep presentation or boutique pickup.
           </p>
 
           {/* Search Box */}
@@ -126,15 +129,25 @@ export const TrackOrderPage: React.FC<TrackOrderPageProps> = ({ initialOrderNumb
             {/* Header Details */}
             <div className="flex flex-col sm:flex-row sm:items-center justify-between pb-6 border-b border-neutral-100 gap-4">
               <div>
-                <span className="text-[10px] font-semibold uppercase tracking-wider text-[#86868b]">Order Reference</span>
-                <h3 className="font-mono text-xl font-semibold text-[#1d1d1f] mt-0.5">{order.order_number}</h3>
+                <div className="flex items-center gap-2">
+                  <span className="text-[10px] font-semibold uppercase tracking-wider text-[#86868b]">Order Reference</span>
+                  <span className={`text-[9px] font-semibold uppercase px-2 py-0.5 rounded-full ${
+                    isPickup ? 'bg-amber-100 text-amber-900' : 'bg-blue-100 text-blue-900'
+                  }`}>
+                    {isPickup ? 'Store Pickup Reservation' : 'Metro Manila Chilled Delivery'}
+                  </span>
+                  <span className="text-[9px] font-semibold uppercase px-2 py-0.5 rounded-full bg-emerald-50 text-emerald-800 border border-emerald-200">
+                    {order.payment_method} ({order.payment_status})
+                  </span>
+                </div>
+                <h3 className="font-mono text-xl font-semibold text-[#1d1d1f] mt-1">{order.order_number}</h3>
                 <span className="text-xs text-[#86868b] mt-1 block">
                   Recipient: <strong className="text-[#1d1d1f] font-medium">{order.recipient_name || order.customer_name}</strong>
                 </span>
               </div>
 
               <div className="sm:text-right">
-                <span className="text-[10px] font-semibold uppercase tracking-wider text-[#86868b]">Delivery Schedule</span>
+                <span className="text-[10px] font-semibold uppercase tracking-wider text-[#86868b]">Schedule</span>
                 <p className="text-sm font-semibold text-[#1d1d1f] mt-0.5">{order.delivery_date || 'Today Express'}</p>
                 <p className="text-xs text-neutral-600 font-medium">{order.delivery_time_slot || 'Standard Dispatch'}</p>
               </div>
@@ -183,19 +196,21 @@ export const TrackOrderPage: React.FC<TrackOrderPageProps> = ({ initialOrderNumb
               </div>
             </div>
 
-            {/* Simulated Live Courier Transit Map & Chilled Delivery Guarantee */}
+            {/* Courier Transit Route or Store Pickup Showcase */}
             <div className="bg-[#f5f5f7] border border-neutral-200/70 rounded-3xl p-6 space-y-4">
               <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-2">
                 <div className="flex items-center gap-2.5">
                   <div className="w-8 h-8 rounded-full bg-[#1d1d1f] text-white flex items-center justify-center font-bold text-xs shadow-xs">
-                    <Navigation className="w-4 h-4" />
+                    {isPickup ? <Building2 className="w-4 h-4" /> : <Navigation className="w-4 h-4" />}
                   </div>
                   <div>
                     <h5 className="font-semibold text-xs text-[#1d1d1f]">
-                      Chilled Courier Route Progress
+                      {isPickup ? 'Atelier Pickup Status' : 'Chilled Courier Route Progress'}
                     </h5>
                     <span className="text-[10px] text-[#86868b]">
-                      Vehicle: Van #4 (Refrigerated at 48°F) • Courier: Michael Vance
+                      {isPickup
+                        ? 'Conditioned in BGC Flagship Temperature Showcase (10°C)'
+                        : 'Vehicle: Van #4 (Refrigerated at 10°C) • Courier: Michael Vance (Metro Manila Dispatch)'}
                     </span>
                   </div>
                 </div>
@@ -206,9 +221,8 @@ export const TrackOrderPage: React.FC<TrackOrderPageProps> = ({ initialOrderNumb
                 </div>
               </div>
 
-              {/* Graphic map route mock - Apple dark minimalist aesthetic */}
+              {/* Graphic route mock */}
               <div className="h-28 bg-[#1d1d1f] rounded-2xl relative overflow-hidden flex items-center px-8 text-white shadow-inner">
-                {/* Visual highway route lines */}
                 <div className="absolute inset-x-8 top-1/2 -translate-y-1/2 h-0.5 bg-white/15 border-b border-dashed border-white/30" />
 
                 <div className="flex items-center justify-between w-full relative z-10">
@@ -216,15 +230,16 @@ export const TrackOrderPage: React.FC<TrackOrderPageProps> = ({ initialOrderNumb
                     <div className="w-7 h-7 rounded-full bg-white text-[#1d1d1f] flex items-center justify-center font-bold text-xs shadow-md">
                       🏢
                     </div>
-                    <span className="text-[10px] font-medium mt-1 text-neutral-300">Floral K Atelier</span>
+                    <span className="text-[10px] font-medium mt-1 text-neutral-300">BGC Atelier</span>
                   </div>
 
-                  {/* Courier Van moving icon */}
                   <div className="flex flex-col items-center animate-pulse">
                     <div className="w-9 h-9 rounded-full bg-white text-[#1d1d1f] flex items-center justify-center shadow-lg border border-neutral-200">
-                      <Truck className="w-4 h-4" />
+                      {isPickup ? <Store className="w-4 h-4 text-emerald-700" /> : <Truck className="w-4 h-4 text-[#1d1d1f]" />}
                     </div>
-                    <span className="text-[10px] font-semibold mt-1 text-white">En Route</span>
+                    <span className="text-[10px] font-semibold mt-1 text-white">
+                      {isPickup ? 'Ready at Counter' : 'En Route'}
+                    </span>
                   </div>
 
                   <div className="flex flex-col items-center">
@@ -242,10 +257,10 @@ export const TrackOrderPage: React.FC<TrackOrderPageProps> = ({ initialOrderNumb
               {/* Destination */}
               <div className="p-4 bg-[#f5f5f7] rounded-2xl space-y-1.5 border border-neutral-200/60">
                 <span className="text-[10px] font-semibold uppercase tracking-wider text-[#86868b] block">
-                  Delivery Destination
+                  {isPickup ? 'Pickup Location' : 'Delivery Destination'}
                 </span>
                 <p className="font-medium text-[#1d1d1f]">
-                  {order.delivery_address || 'Storefront Pickup - Floral K Boutique'}
+                  {order.delivery_address || 'Storefront Pickup - Floral K Atelier BGC'}
                 </p>
                 {order.customer_phone && (
                   <p className="text-[#86868b] text-[11px]">Contact: {order.customer_phone}</p>
@@ -258,7 +273,7 @@ export const TrackOrderPage: React.FC<TrackOrderPageProps> = ({ initialOrderNumb
                   Enclosed Handwritten Gift Note
                 </span>
                 <p className="font-serif italic text-sm text-[#1d1d1f] leading-snug">
-                  "{order.card_message || 'Complimentary card with signature Floral K wax seal.'}"
+                  &ldquo;{order.card_message || 'Complimentary card with signature Floral K wax seal.'}&rdquo;
                 </p>
               </div>
             </div>
@@ -267,7 +282,7 @@ export const TrackOrderPage: React.FC<TrackOrderPageProps> = ({ initialOrderNumb
             {order.items && order.items.length > 0 && (
               <div className="space-y-2 pt-4 border-t border-neutral-100">
                 <span className="text-[10px] font-semibold uppercase tracking-wider text-[#86868b] block">
-                  Arrangements in this delivery ({order.items.length})
+                  Arrangements in this order ({order.items.length})
                 </span>
                 <div className="divide-y divide-neutral-100">
                   {order.items.map((it, i) => (
@@ -277,7 +292,7 @@ export const TrackOrderPage: React.FC<TrackOrderPageProps> = ({ initialOrderNumb
                         <span className="text-[#86868b] ml-2 font-mono text-[11px]">SKU: {it.product_sku}</span>
                       </div>
                       <div className="font-medium text-[#1d1d1f] font-mono">
-                        Qty: {it.quantity} • ${(it.unit_price * it.quantity).toFixed(2)}
+                        Qty: {it.quantity} • {formatPrice(it.unit_price * it.quantity)}
                       </div>
                     </div>
                   ))}
