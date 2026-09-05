@@ -1,6 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import { useAuth } from '../context/AuthContext';
 import type { Product, POSSession, POSReceipt } from '../types';
+import { formatPrice } from '../utils/format';
 import {
   Store,
   Search,
@@ -15,8 +16,11 @@ import {
   AlertCircle,
   Clock,
   Sparkles,
-  Tag
+  Tag,
+  QrCode
 } from 'lucide-react';
+
+const FALLBACK_FLORAL_IMAGE = 'https://images.unsplash.com/photo-1518709268805-4e9042af9f23?w=800&auto=format&fit=crop&q=80';
 
 export const POSPage: React.FC = () => {
   const { user, token } = useAuth();
@@ -31,19 +35,19 @@ export const POSPage: React.FC = () => {
   const [ticketItems, setTicketItems] = useState<{ product: Product; quantity: number; unitPrice: number }[]>([]);
   const [customerName, setCustomerName] = useState('Walk-in Guest');
   const [customerPhone, setCustomerPhone] = useState('');
-  const [paymentMethod, setPaymentMethod] = useState<'cash' | 'card' | 'digital_wallet'>('cash');
+  const [paymentMethod, setPaymentMethod] = useState<'cash' | 'card' | 'qrph' | 'gcash' | 'maya'>('cash');
   const [amountTendered, setAmountTendered] = useState<number>(0);
   const [discountAmount, setDiscountAmount] = useState<number>(0);
 
   // Custom arrangement quick-add
   const [customItemModal, setCustomItemModal] = useState(false);
   const [customName, setCustomName] = useState('Bespoke Florist Hand-Tie');
-  const [customPrice, setCustomPrice] = useState('65.00');
+  const [customPrice, setCustomPrice] = useState('2500.00');
 
   // Modals
   const [receiptModal, setReceiptModal] = useState<POSReceipt | null>(null);
   const [sessionModalOpen, setSessionModalOpen] = useState(false);
-  const [sessionCashInput, setSessionCashInput] = useState('150.00');
+  const [sessionCashInput, setSessionCashInput] = useState('5000.00');
   const [sessionError, setSessionError] = useState('');
   const [saleError, setSaleError] = useState('');
   const [loading, setLoading] = useState(false);
@@ -81,9 +85,9 @@ export const POSPage: React.FC = () => {
     loadData();
   }, [token]);
 
-  // Calculations
+  // Calculations (12% EVAT)
   const subtotal = ticketItems.reduce((s, it) => s + it.unitPrice * it.quantity, 0);
-  const tax = parseFloat(((Math.max(0, subtotal - discountAmount)) * 0.0825).toFixed(2));
+  const tax = parseFloat(((Math.max(0, subtotal - discountAmount)) * 0.12).toFixed(2));
   const total = parseFloat(((Math.max(0, subtotal - discountAmount)) + tax).toFixed(2));
   const changeDue = paymentMethod === 'cash' ? Math.max(0, parseFloat((amountTendered - total).toFixed(2))) : 0.0;
 
@@ -108,7 +112,7 @@ export const POSPage: React.FC = () => {
 
   const handleAddCustomItem = (e: React.FormEvent) => {
     e.preventDefault();
-    const priceNum = parseFloat(customPrice) || 50;
+    const priceNum = parseFloat(customPrice) || 2500;
     const fakeProduct: Product = {
       id: Date.now(),
       name: customName || 'Custom Florist Arrangement',
@@ -120,7 +124,7 @@ export const POSPage: React.FC = () => {
       stock: 99,
       min_stock_alert: 1,
       description: 'Custom arrangement crafted live at boutique counter',
-      images: ['https://images.unsplash.com/photo-1518709268805-4e9042af9f23'],
+      images: [FALLBACK_FLORAL_IMAGE],
       flower_types: ['Bespoke Cut Stems'],
       occasion_tags: ['Custom'],
       is_featured: 0,
@@ -184,14 +188,13 @@ export const POSPage: React.FC = () => {
     }
 
     if (paymentMethod === 'cash' && amountTendered < total) {
-      setSaleError(`Tendered amount ($${amountTendered.toFixed(2)}) is less than total ($${total.toFixed(2)})`);
+      setSaleError(`Tendered amount (${formatPrice(amountTendered)}) is less than total (${formatPrice(total)})`);
       return;
     }
 
     setLoading(true);
 
     try {
-      // Find valid product IDs that exist on backend (filter custom ones or use standard fallback)
       const validItems = ticketItems.map((it) => {
         const found = products.find((p) => p.id === it.product.id);
         const productId = found ? found.id : products[0]?.id || 1;
@@ -224,7 +227,6 @@ export const POSPage: React.FC = () => {
       const data = await res.json();
       if (!res.ok) throw new Error(data.error || 'Failed to process POS sale');
 
-      // Show receipt modal & refresh stock
       setReceiptModal(data.receipt);
       clearTicket();
       loadData();
@@ -256,7 +258,7 @@ export const POSPage: React.FC = () => {
             <span className="font-sans font-semibold text-sm tracking-tight flex items-center gap-2">
               <span>FLORAL K POS TERMINAL</span>
               <span className="text-[10px] bg-neutral-100 text-neutral-600 px-2 py-0.5 rounded-full font-sans uppercase font-medium">
-                Register #1
+                Register #1 • BGC Flagship
               </span>
             </span>
             <span className="text-xs text-neutral-400 block">
@@ -274,8 +276,8 @@ export const POSPage: React.FC = () => {
           {activeSession && (
             <div className="text-right hidden sm:block pr-2">
               <span className="text-[9px] text-neutral-400 uppercase tracking-wider block">Shift Sales</span>
-              <span className="font-semibold text-[#1d1d1f] text-sm">
-                ${(activeSession.total_sales ?? 0).toFixed(2)}
+              <span className="font-semibold text-[#1d1d1f] text-sm font-mono">
+                {formatPrice(activeSession.total_sales ?? 0)}
               </span>
             </div>
           )}
@@ -290,7 +292,7 @@ export const POSPage: React.FC = () => {
 
           <button
             onClick={() => {
-              setSessionCashInput(activeSession ? '150.00' : '150.00');
+              setSessionCashInput(activeSession ? '5000.00' : '5000.00');
               setSessionModalOpen(true);
             }}
             className={`px-3.5 py-1.5 rounded-full text-xs font-medium transition-all shadow-xs cursor-pointer ${
@@ -368,8 +370,9 @@ export const POSPage: React.FC = () => {
                   <div>
                     <div className="aspect-square rounded-xl overflow-hidden mb-2.5 bg-[#f5f5f7]">
                       <img
-                        src={p.images[0] || 'https://images.unsplash.com/photo-1518709268805-4e9042af9f23'}
+                        src={p.images[0] || FALLBACK_FLORAL_IMAGE}
                         alt={p.name}
+                        onError={(e) => { (e.currentTarget as HTMLImageElement).src = FALLBACK_FLORAL_IMAGE; }}
                         className="w-full h-full object-cover"
                       />
                     </div>
@@ -380,7 +383,7 @@ export const POSPage: React.FC = () => {
                   </div>
 
                   <div className="mt-2.5 pt-2 border-t border-neutral-100 flex items-center justify-between">
-                    <span className="font-semibold text-sm text-[#1d1d1f] font-mono">${p.price.toFixed(2)}</span>
+                    <span className="font-semibold text-xs text-[#1d1d1f] font-mono">{formatPrice(p.price)}</span>
                     <span className={`text-[10px] font-medium px-2 py-0.5 rounded-full ${
                       p.stock <= p.min_stock_alert ? 'bg-amber-100 text-amber-800' : 'bg-neutral-100 text-neutral-600'
                     }`}>
@@ -402,7 +405,7 @@ export const POSPage: React.FC = () => {
               <div className="flex items-center justify-between pb-3 border-b border-neutral-200/70">
                 <div>
                   <h4 className="text-sm font-semibold text-[#1d1d1f]">Current POS Order</h4>
-                  <span className="text-[10px] text-[#86868b]">Direct In-Store Counter</span>
+                  <span className="text-[10px] text-[#86868b]">Direct In-Store Counter Tender</span>
                 </div>
                 {ticketItems.length > 0 && (
                   <button
@@ -443,7 +446,7 @@ export const POSPage: React.FC = () => {
                     <div key={product.id} className="py-2.5 flex items-center justify-between text-xs gap-2">
                       <div className="flex-1 min-w-0">
                         <span className="font-medium text-[#1d1d1f] block truncate">{product.name}</span>
-                        <span className="text-[11px] text-[#86868b] font-mono">${unitPrice.toFixed(2)} each</span>
+                        <span className="text-[11px] text-[#86868b] font-mono">{formatPrice(unitPrice)} each</span>
                       </div>
 
                       <div className="flex items-center border border-neutral-200/80 rounded-full bg-[#f5f5f7]">
@@ -462,8 +465,8 @@ export const POSPage: React.FC = () => {
                         </button>
                       </div>
 
-                      <span className="font-medium text-[#1d1d1f] font-mono text-xs w-16 text-right">
-                        ${(unitPrice * quantity).toFixed(2)}
+                      <span className="font-medium text-[#1d1d1f] font-mono text-xs w-20 text-right">
+                        {formatPrice(unitPrice * quantity)}
                       </span>
                     </div>
                   ))
@@ -476,30 +479,32 @@ export const POSPage: React.FC = () => {
               <div className="space-y-1 text-xs text-neutral-600">
                 <div className="flex justify-between">
                   <span>Subtotal</span>
-                  <span className="font-medium text-[#1d1d1f] font-mono">${subtotal.toFixed(2)}</span>
+                  <span className="font-medium text-[#1d1d1f] font-mono">{formatPrice(subtotal)}</span>
                 </div>
                 {discountAmount > 0 && (
                   <div className="flex justify-between text-emerald-700">
                     <span>Manual Discount</span>
-                    <span className="font-mono">-${discountAmount.toFixed(2)}</span>
+                    <span className="font-mono">-{formatPrice(discountAmount)}</span>
                   </div>
                 )}
                 <div className="flex justify-between">
-                  <span>Sales Tax (8.25%)</span>
-                  <span className="font-mono">${tax.toFixed(2)}</span>
+                  <span>12% EVAT (BIR Compliant)</span>
+                  <span className="font-mono">{formatPrice(tax)}</span>
                 </div>
                 <div className="flex justify-between text-base font-semibold text-[#1d1d1f] pt-1.5 border-t border-neutral-200/70">
                   <span>Grand Total</span>
-                  <span className="text-[#1d1d1f] font-mono text-lg font-semibold">${total.toFixed(2)}</span>
+                  <span className="text-[#1d1d1f] font-mono text-lg font-bold">{formatPrice(total)}</span>
                 </div>
               </div>
 
-              {/* Payment Method Selector */}
-              <div className="grid grid-cols-3 gap-2">
+              {/* Philippine Payment Method Selector */}
+              <div className="grid grid-cols-5 gap-1.5">
                 {[
                   { key: 'cash', label: 'Cash', icon: <Banknote className="w-3.5 h-3.5" /> },
-                  { key: 'card', label: 'Card / POS', icon: <CreditCard className="w-3.5 h-3.5" /> },
-                  { key: 'digital_wallet', label: 'Apple Pay', icon: <Smartphone className="w-3.5 h-3.5" /> },
+                  { key: 'qrph', label: 'QRPH', icon: <QrCode className="w-3.5 h-3.5" /> },
+                  { key: 'gcash', label: 'GCash', icon: <Smartphone className="w-3.5 h-3.5" /> },
+                  { key: 'maya', label: 'Maya', icon: <Smartphone className="w-3.5 h-3.5" /> },
+                  { key: 'card', label: 'Card', icon: <CreditCard className="w-3.5 h-3.5" /> },
                 ].map((m) => (
                   <button
                     key={m.key}
@@ -508,7 +513,7 @@ export const POSPage: React.FC = () => {
                       setPaymentMethod(m.key as any);
                       if (m.key !== 'cash') setAmountTendered(total);
                     }}
-                    className={`py-2 px-2 rounded-xl text-xs font-medium flex items-center justify-center gap-1.5 border transition-all cursor-pointer ${
+                    className={`py-2 px-1 rounded-xl text-[11px] font-medium flex flex-col items-center justify-center gap-1 border transition-all cursor-pointer ${
                       paymentMethod === m.key
                         ? 'bg-[#1d1d1f] text-white border-[#1d1d1f] shadow-xs font-semibold'
                         : 'bg-neutral-50 text-neutral-700 border-neutral-200 hover:bg-neutral-100'
@@ -524,25 +529,25 @@ export const POSPage: React.FC = () => {
               {paymentMethod === 'cash' && (
                 <div className="p-3 bg-neutral-50 border border-neutral-200 rounded-2xl space-y-2">
                   <div className="flex items-center justify-between text-xs font-medium text-neutral-700">
-                    <span>Cash Tendered:</span>
+                    <span>Cash Tendered (₱):</span>
                     <input
                       type="number"
-                      step="0.01"
+                      step="1"
                       value={amountTendered || ''}
                       onChange={(e) => setAmountTendered(parseFloat(e.target.value) || 0)}
-                      className="w-28 p-1.5 border border-neutral-300 rounded-lg text-right font-mono font-semibold bg-white text-[#1d1d1f] focus:outline-none focus:ring-1 focus:ring-black"
+                      className="w-32 p-1.5 border border-neutral-300 rounded-lg text-right font-mono font-semibold bg-white text-[#1d1d1f] focus:outline-none focus:ring-1 focus:ring-black"
                     />
                   </div>
 
                   <div className="flex gap-1.5">
-                    {[total, 20, 50, 100].map((amt, idx) => (
+                    {[total, 1000, 2000, 5000].map((amt, idx) => (
                       <button
                         key={idx}
                         type="button"
                         onClick={() => setAmountTendered(amt)}
                         className="flex-1 py-1 bg-white border border-neutral-200 rounded-lg text-[11px] font-medium text-neutral-700 hover:bg-neutral-100 cursor-pointer"
                       >
-                        {idx === 0 ? 'Exact' : `$${amt}`}
+                        {idx === 0 ? 'Exact' : formatPrice(amt).replace('.00', '')}
                       </button>
                     ))}
                   </div>
@@ -550,9 +555,16 @@ export const POSPage: React.FC = () => {
                   <div className="flex items-center justify-between text-xs pt-1.5 border-t border-neutral-200 text-neutral-700">
                     <span className="font-medium">Change Due:</span>
                     <span className="font-mono text-base font-semibold text-emerald-700">
-                      ${changeDue.toFixed(2)}
+                      {formatPrice(changeDue)}
                     </span>
                   </div>
+                </div>
+              )}
+
+              {/* Digital E-wallet / QRPH Scan Notice for POS */}
+              {paymentMethod !== 'cash' && (
+                <div className="p-2.5 bg-neutral-100 rounded-xl text-center text-xs text-neutral-600 font-medium">
+                  Tender: <strong className="uppercase text-neutral-900">{paymentMethod}</strong> • Instant Verification
                 </div>
               )}
 
@@ -568,10 +580,10 @@ export const POSPage: React.FC = () => {
                 type="button"
                 disabled={loading || ticketItems.length === 0}
                 onClick={handleProcessSale}
-                className="w-full py-3.5 rounded-full bg-[#1d1d1f] hover:bg-black text-white font-medium text-sm shadow-xs hover:shadow-md transition-all flex items-center justify-center gap-2 cursor-pointer disabled:opacity-40"
+                className="w-full py-3.5 rounded-full bg-[#1d1d1f] hover:bg-black text-white font-medium text-xs shadow-xs hover:shadow-md transition-all flex items-center justify-center gap-2 cursor-pointer disabled:opacity-40"
               >
                 <CheckCircle2 className="w-4 h-4 text-emerald-400" />
-                <span>{loading ? 'Processing Sale...' : `Complete Sale • $${total.toFixed(2)}`}</span>
+                <span>{loading ? 'Processing Sale...' : `Complete Sale • ${formatPrice(total)}`}</span>
               </button>
             </div>
 
@@ -597,10 +609,10 @@ export const POSPage: React.FC = () => {
                 />
               </div>
               <div>
-                <label className="font-medium text-[#1d1d1f] block mb-1">Custom Price ($)</label>
+                <label className="font-medium text-[#1d1d1f] block mb-1">Custom Price (₱)</label>
                 <input
                   type="number"
-                  step="0.01"
+                  step="1"
                   required
                   value={customPrice}
                   onChange={(e) => setCustomPrice(e.target.value)}
@@ -662,7 +674,7 @@ export const POSPage: React.FC = () => {
                 {receiptModal.items.map((it, idx) => (
                   <div key={idx} className="flex justify-between text-[11px]">
                     <span className="truncate max-w-[170px]">{it.quantity}x {it.productName}</span>
-                    <span>${it.subtotal.toFixed(2)}</span>
+                    <span>{formatPrice(it.subtotal)}</span>
                   </div>
                 ))}
               </div>
@@ -670,30 +682,30 @@ export const POSPage: React.FC = () => {
               <div className="pt-2 border-t border-dashed border-neutral-300 space-y-0.5 text-right text-[11px]">
                 <div className="flex justify-between">
                   <span>Subtotal:</span>
-                  <span>${receiptModal.subtotal.toFixed(2)}</span>
+                  <span>{formatPrice(receiptModal.subtotal)}</span>
                 </div>
                 {receiptModal.discount > 0 && (
                   <div className="flex justify-between text-emerald-700">
                     <span>Discount:</span>
-                    <span>-${receiptModal.discount.toFixed(2)}</span>
+                    <span>-{formatPrice(receiptModal.discount)}</span>
                   </div>
                 )}
                 <div className="flex justify-between">
-                  <span>Tax (8.25%):</span>
-                  <span>${receiptModal.tax.toFixed(2)}</span>
+                  <span>12% EVAT:</span>
+                  <span>{formatPrice(receiptModal.tax)}</span>
                 </div>
                 <div className="flex justify-between font-semibold text-[#1d1d1f] text-xs pt-1 border-t border-neutral-200">
                   <span>TOTAL:</span>
-                  <span>${receiptModal.total.toFixed(2)}</span>
+                  <span>{formatPrice(receiptModal.total)}</span>
                 </div>
                 <div className="flex justify-between pt-1">
-                  <span>Tendered ({receiptModal.paymentMethod}):</span>
-                  <span>${receiptModal.amountTendered.toFixed(2)}</span>
+                  <span>Tendered ({receiptModal.paymentMethod.toUpperCase()}):</span>
+                  <span>{formatPrice(receiptModal.amountTendered)}</span>
                 </div>
                 {receiptModal.paymentMethod === 'cash' && (
                   <div className="flex justify-between font-semibold text-emerald-800">
                     <span>Change Due:</span>
-                    <span>${receiptModal.changeDue.toFixed(2)}</span>
+                    <span>{formatPrice(receiptModal.changeDue)}</span>
                   </div>
                 )}
               </div>
@@ -732,16 +744,16 @@ export const POSPage: React.FC = () => {
             <p className="text-xs text-[#86868b]">
               {activeSession
                 ? 'Enter final cash count in the drawer to record closing float & compute discrepancies.'
-                : 'Enter opening cash float (bills & coins) in register #1.'}
+                : 'Enter opening cash float (bills & coins in PHP) in register #1.'}
             </p>
 
             <div>
               <label className="text-xs font-medium text-[#1d1d1f] block mb-1">
-                {activeSession ? 'Closing Counted Cash ($)' : 'Opening Cash Float ($)'}
+                {activeSession ? 'Closing Counted Cash (₱)' : 'Opening Cash Float (₱)'}
               </label>
               <input
                 type="number"
-                step="0.01"
+                step="1"
                 value={sessionCashInput}
                 onChange={(e) => setSessionCashInput(e.target.value)}
                 className="w-full p-2.5 border border-neutral-200/80 rounded-xl bg-[#f5f5f7] font-mono font-semibold text-[#1d1d1f] focus:bg-white focus:outline-none focus:ring-1 focus:ring-black"
