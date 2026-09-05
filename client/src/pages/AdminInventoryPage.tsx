@@ -1,7 +1,10 @@
 import React, { useState, useEffect } from 'react';
 import { useAuth } from '../context/AuthContext';
 import { Product } from '../types';
+import { formatPrice } from '../utils/format';
 import { Package, AlertTriangle, Plus, Search, Check, RefreshCw } from 'lucide-react';
+
+const FALLBACK_FLORAL_IMAGE = 'https://images.unsplash.com/photo-1518709268805-4e9042af9f23?w=800&auto=format&fit=crop&q=80';
 
 export const AdminInventoryPage: React.FC = () => {
   const { token } = useAuth();
@@ -80,7 +83,7 @@ export const AdminInventoryPage: React.FC = () => {
               Inventory Management
             </h1>
             <p className="text-xs text-[#86868b] mt-0.5">
-              Track stem allocations, trigger morning restocks, and monitor low inventory warnings.
+              Track stem allocations, trigger morning restocks, and monitor low inventory warnings in Philippine Pesos (PHP).
             </p>
           </div>
 
@@ -158,9 +161,10 @@ export const AdminInventoryPage: React.FC = () => {
                       <td className="p-4">
                         <div className="flex items-center gap-3">
                           <img
-                            src={p.images[0] || 'https://images.unsplash.com/photo-1518709268805-4e9042af9f23'}
+                            src={p.images[0] || FALLBACK_FLORAL_IMAGE}
                             alt={p.name}
-                            className="w-10 h-10 rounded-xl object-cover border border-neutral-200/80 shrink-0"
+                            onError={(e) => { (e.currentTarget as HTMLImageElement).src = FALLBACK_FLORAL_IMAGE; }}
+                            className="w-10 h-10 rounded-xl object-cover border border-neutral-200/80 shrink-0 bg-neutral-100"
                           />
                           <div>
                             <span className="font-medium text-[#1d1d1f] block">{p.name}</span>
@@ -172,8 +176,8 @@ export const AdminInventoryPage: React.FC = () => {
                       </td>
                       <td className="p-4 font-mono text-neutral-600">{p.sku}</td>
                       <td className="p-4 text-neutral-600">{p.category_name}</td>
-                      <td className="p-4 font-semibold text-[#1d1d1f]">${p.price.toFixed(2)}</td>
-                      <td className="p-4 text-[#86868b]">${p.cost_price.toFixed(2)}</td>
+                      <td className="p-4 font-semibold text-[#1d1d1f] font-mono">{formatPrice(p.price)}</td>
+                      <td className="p-4 text-[#86868b] font-mono">{formatPrice(p.cost_price)}</td>
                       <td className="p-4">
                         <span className={`inline-flex items-center gap-1 font-medium px-2.5 py-1 rounded-full text-[11px] ${
                           p.stock === 0
