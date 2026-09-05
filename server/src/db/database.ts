@@ -103,7 +103,7 @@ function initSchema(db: Database.Database): void {
       order_type TEXT NOT NULL CHECK(order_type IN ('online_delivery', 'online_pickup', 'pos_walkin')),
       status TEXT NOT NULL CHECK(status IN ('pending', 'confirmed', 'arranging', 'ready_for_pickup', 'out_for_delivery', 'delivered', 'cancelled')),
       payment_status TEXT NOT NULL CHECK(payment_status IN ('pending', 'paid', 'refunded', 'failed')),
-      payment_method TEXT NOT NULL CHECK(payment_method IN ('cash', 'card', 'digital_wallet', 'cod')),
+      payment_method TEXT NOT NULL CHECK(payment_method IN ('cash', 'card', 'digital_wallet', 'cod', 'qrph', 'gcash', 'maya')),
       subtotal REAL NOT NULL,
       discount REAL NOT NULL DEFAULT 0.0,
       delivery_fee REAL NOT NULL DEFAULT 0.0,
