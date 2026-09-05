@@ -1,6 +1,7 @@
 import React, { useState } from 'react';
 import { useAuth } from '../../context/AuthContext';
 import { useCart } from '../../context/CartContext';
+import { formatPrice } from '../../utils/format';
 import {
   ShoppingBag,
   Sparkles,
@@ -189,7 +190,7 @@ export const Navbar: React.FC<NavbarProps> = ({ currentView, onNavigate, onSearc
               )}
               {itemCount > 0 && (
                 <span className="hidden sm:inline text-neutral-300 text-xs font-normal">
-                  ${subtotal.toFixed(2)}
+                  {formatPrice(subtotal)}
                 </span>
               )}
             </button>
@@ -200,18 +201,67 @@ export const Navbar: React.FC<NavbarProps> = ({ currentView, onNavigate, onSearc
                 <button className="flex items-center gap-1.5 text-xs text-neutral-700 bg-neutral-100 hover:bg-neutral-200 px-3 py-1.5 rounded-full cursor-pointer transition-colors">
                   <UserIcon className="w-3 h-3 text-neutral-600" />
                   <span className="max-w-[90px] truncate font-medium">{user.name.split(' ')[0]}</span>
+                  <span className="text-[9px] bg-neutral-200 text-neutral-700 px-1.5 py-0.5 rounded-full font-semibold uppercase">
+                    {user.role === 'super_admin' ? 'Super Admin' : user.role}
+                  </span>
                 </button>
-                <div className="hidden group-hover:block absolute right-0 mt-1 w-48 bg-white border border-neutral-200 rounded-2xl shadow-xl p-2 text-xs z-50">
+                <div className="hidden group-hover:block absolute right-0 mt-1 w-52 bg-white border border-neutral-200 rounded-2xl shadow-xl p-2 text-xs z-50">
                   <div className="px-2 py-1.5 border-b border-neutral-100">
-                    <p className="font-semibold text-neutral-900">{user.name}</p>
+                    <p className="font-semibold text-neutral-900 truncate">{user.name}</p>
                     <p className="text-neutral-400 truncate text-[11px]">{user.email}</p>
-                    <span className="inline-block mt-1 px-1.5 py-0.5 rounded-full bg-neutral-100 text-neutral-700 text-[9px] font-semibold uppercase">
-                      {user.role}
-                    </span>
                   </div>
+                  
+                  {/* Quick role-based links */}
+                  <div className="py-1 border-b border-neutral-100 space-y-0.5">
+                    <button
+                      onClick={() => onNavigate('storefront')}
+                      className="w-full text-left flex items-center gap-2 px-2 py-1 text-neutral-700 hover:bg-neutral-50 rounded-lg cursor-pointer"
+                    >
+                      <ShoppingBag className="w-3.5 h-3.5 text-neutral-500" /> Storefront
+                    </button>
+                    {(user.role === 'admin' || user.role === 'owner' || user.role === 'super_admin') && (
+                      <>
+                        <button
+                          onClick={() => onNavigate('pos')}
+                          className="w-full text-left flex items-center gap-2 px-2 py-1 text-neutral-700 hover:bg-neutral-50 rounded-lg cursor-pointer"
+                        >
+                          <Store className="w-3.5 h-3.5 text-emerald-600" /> POS Terminal
+                        </button>
+                        <button
+                          onClick={() => onNavigate('orders')}
+                          className="w-full text-left flex items-center gap-2 px-2 py-1 text-neutral-700 hover:bg-neutral-50 rounded-lg cursor-pointer"
+                        >
+                          <Kanban className="w-3.5 h-3.5 text-indigo-600" /> Fulfillment Board
+                        </button>
+                        <button
+                          onClick={() => onNavigate('inventory')}
+                          className="w-full text-left flex items-center gap-2 px-2 py-1 text-neutral-700 hover:bg-neutral-50 rounded-lg cursor-pointer"
+                        >
+                          <Package className="w-3.5 h-3.5 text-amber-600" /> Botanical Inventory
+                        </button>
+                      </>
+                    )}
+                    {(user.role === 'owner' || user.role === 'super_admin') && (
+                      <button
+                        onClick={() => onNavigate('owner')}
+                        className="w-full text-left flex items-center gap-2 px-2 py-1 text-neutral-700 hover:bg-neutral-50 rounded-lg cursor-pointer"
+                      >
+                        <TrendingUp className="w-3.5 h-3.5 text-amber-600" /> Executive Analytics
+                      </button>
+                    )}
+                    {user.role === 'super_admin' && (
+                      <button
+                        onClick={() => onNavigate('superadmin')}
+                        className="w-full text-left flex items-center gap-2 px-2 py-1 text-neutral-700 hover:bg-neutral-50 rounded-lg cursor-pointer"
+                      >
+                        <Shield className="w-3.5 h-3.5 text-purple-600" /> Super Admin Portal
+                      </button>
+                    )}
+                  </div>
+
                   <button
-                    onClick={logout}
-                    className="w-full text-left flex items-center gap-1.5 px-2 py-1.5 mt-1 text-rose-600 hover:bg-rose-50 rounded-xl cursor-pointer"
+                    onClick={() => { logout(); onNavigate('storefront'); }}
+                    className="w-full text-left flex items-center gap-1.5 px-2 py-1.5 mt-1 text-rose-600 hover:bg-rose-50 rounded-xl cursor-pointer font-medium"
                   >
                     <LogOut className="w-3.5 h-3.5" />
                     Sign Out
@@ -219,12 +269,14 @@ export const Navbar: React.FC<NavbarProps> = ({ currentView, onNavigate, onSearc
                 </div>
               </div>
             ) : (
-              <button
-                onClick={() => onNavigate('login')}
-                className="text-xs font-medium text-neutral-700 hover:text-black px-3 py-1.5 rounded-full hover:bg-neutral-100 transition-colors cursor-pointer"
-              >
-                Sign In
-              </button>
+              <div className="flex items-center gap-1">
+                <button
+                  onClick={() => onNavigate('login')}
+                  className="text-xs font-medium text-neutral-700 hover:text-black px-3 py-1.5 rounded-full hover:bg-neutral-100 transition-colors cursor-pointer"
+                >
+                  Sign In
+                </button>
+              </div>
             )}
 
             {/* Mobile menu button */}
