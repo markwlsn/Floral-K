@@ -5,7 +5,7 @@ interface AuthContextType {
   user: User | null;
   token: string | null;
   role: UserRole;
-  login: (email: string, password: string) => Promise<{ success: boolean; error?: string }>;
+  login: (email: string, password: string) => Promise<{ success: boolean; user?: User; error?: string }>;
   logout: () => void;
   quickSwitchRole: (targetRole: UserRole) => Promise<void>;
   loading: boolean;
@@ -51,7 +51,7 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
     }
   }, [token]);
 
-  const login = async (email: string, password: string): Promise<{ success: boolean; error?: string }> => {
+  const login = async (email: string, password: string): Promise<{ success: boolean; user?: User; error?: string }> => {
     try {
       const res = await fetch('/api/auth/login', {
         method: 'POST',
@@ -67,7 +67,7 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
       setUser(data.user);
       localStorage.setItem('floralk_token', data.token);
       localStorage.setItem('floralk_user', JSON.stringify(data.user));
-      return { success: true };
+      return { success: true, user: data.user };
     } catch (err: any) {
       return { success: false, error: err.message || 'Server connection error' };
     }
