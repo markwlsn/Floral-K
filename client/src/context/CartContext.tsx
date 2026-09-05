@@ -62,9 +62,9 @@ export const CartProvider: React.FC<{ children: React.ReactNode }> = ({ children
   const [recipientPhone, setRecipientPhone] = useState<string>('');
   const [deliveryAddress, setDeliveryAddress] = useState<string>('');
 
-  const freeDeliveryThreshold = 120.0;
-  const standardDeliveryFee = 15.0;
-  const taxRate = 0.0825;
+  const freeDeliveryThreshold = 3000.0;
+  const standardDeliveryFee = 150.0;
+  const taxRate = 0.12;
 
   useEffect(() => {
     localStorage.setItem('floralk_cart', JSON.stringify(items));
