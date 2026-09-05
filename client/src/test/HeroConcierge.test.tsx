@@ -22,15 +22,15 @@ describe('HeroConcierge Attention & Conversion Component', () => {
     const bdayButton = screen.getByText(/Birthday Cheer/i);
     fireEvent.click(bdayButton);
 
-    // Click Under $100 budget
-    const budgetBtn = screen.getByText(/Under \$100/i);
+    // Click Under ₱2,500 budget
+    const budgetBtn = screen.getByText(/Under ₱2,500/i);
     fireEvent.click(budgetBtn);
 
     // Click Submit
     const submitBtn = screen.getByText(/Show Best Matches For Me/i);
     fireEvent.click(submitBtn);
 
-    expect(onFindMatch).toHaveBeenCalledWith('Birthday', 'under100');
+    expect(onFindMatch).toHaveBeenCalledWith('Birthday', 'under2500');
   });
 
   it('triggers quick emotion jump filter on 1-click', () => {
