@@ -60,7 +60,7 @@ export const Footer: React.FC<FooterProps> = ({ onNavigate }) => {
             <span className="font-serif text-2xl font-bold text-white tracking-wider">FLORAL K</span>
           </div>
           <p className="text-xs text-stone-400 leading-relaxed">
-            New York's premier floral design atelier, blending avant-garde European botanical artistry with rapid same-day gifting.
+            Metro Manila's premier floral design atelier, blending avant-garde European botanical artistry with rapid chilled same-day gifting across BGC, Makati, and Greater Manila.
           </p>
           <p className="text-xs text-amber-200/80 font-serif italic">
             "Flowers speak what words cannot utter."
@@ -70,10 +70,10 @@ export const Footer: React.FC<FooterProps> = ({ onNavigate }) => {
         <div>
           <h5 className="text-xs font-semibold uppercase tracking-wider text-amber-300 mb-3">Atelier Hours & Location</h5>
           <p className="text-xs text-stone-400 leading-relaxed">
-            742 Blossom Boulevard, Suite 100<br />
-            Floral District, New York, NY 10001<br />
-            Phone: <span className="text-stone-200">+1 (555) 356-7255</span><br />
-            Daily: 8:00 AM – 7:00 PM EST
+            28th St. cor. 7th Avenue, Bonifacio Global City (BGC)<br />
+            Taguig, Metro Manila 1634, Philippines<br />
+            Phone: <span className="text-stone-200">+63 (02) 8812-3567 / 0917-555-BLOOM</span><br />
+            Daily: 8:00 AM – 8:00 PM PHT
           </p>
         </div>
 
