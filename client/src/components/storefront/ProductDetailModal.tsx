@@ -1,6 +1,7 @@
 import React, { useState } from 'react';
 import type { Product } from '../../types';
 import { useCart } from '../../context/CartContext';
+import { formatPrice } from '../../utils/format';
 import {
   X,
   ShoppingBag,
@@ -30,11 +31,13 @@ interface LuxuryAddOn {
   icon: string;
 }
 
+const FALLBACK_FLORAL_IMAGE = 'https://images.unsplash.com/photo-1518709268805-4e9042af9f23?auto=format&fit=crop&w=800&q=80';
+
 const ADD_ONS: LuxuryAddOn[] = [
-  { id: 'chocolates', name: 'Belgian Truffles (8 pcs)', price: 18.0, icon: '🍫' },
-  { id: 'champagne', name: 'Rosé Champagne Piccolo (375ml)', price: 42.0, icon: '🍾' },
-  { id: 'candle', name: 'Soy Botanical Candle', price: 24.0, icon: '🕯️' },
-  { id: 'vase', name: 'Fluted Ceramic Vase', price: 28.0, icon: '🏺' }
+  { id: 'chocolates', name: 'Belgian Truffles (8 pcs)', price: 450.0, icon: '🍫' },
+  { id: 'champagne', name: 'Rosé Champagne Piccolo (375ml)', price: 1250.0, icon: '🍾' },
+  { id: 'candle', name: 'Soy Botanical Candle', price: 650.0, icon: '🕯️' },
+  { id: 'vase', name: 'Fluted Ceramic Vase', price: 750.0, icon: '🏺' }
 ];
 
 export const ProductDetailModal: React.FC<ProductDetailModalProps> = ({ product, onClose }) => {
@@ -50,8 +53,8 @@ export const ProductDetailModal: React.FC<ProductDetailModalProps> = ({ product,
 
   const sizePricing = {
     classic: { label: 'Classic Signature', extra: 0, desc: 'Original florist stem count' },
-    deluxe: { label: 'Deluxe (+50% Stems)', extra: 35.0, desc: '1.5x fullness & trailing greens' },
-    grand: { label: 'Grand (+100% Stems)', extra: 65.0, desc: 'Double volume statement piece' }
+    deluxe: { label: 'Deluxe (+50% Stems)', extra: 950.0, desc: '1.5x fullness & trailing greens' },
+    grand: { label: 'Grand (+100% Stems)', extra: 1850.0, desc: 'Double volume statement piece' }
   };
 
   const addOnTotal = selectedAddOns.reduce((sum, id) => {
@@ -104,6 +107,12 @@ export const ProductDetailModal: React.FC<ProductDetailModalProps> = ({ product,
             <img
               src={images[selectedImgIndex]}
               alt={product.name}
+              onError={(e) => {
+                const target = e.target as HTMLImageElement;
+                if (target.src !== FALLBACK_FLORAL_IMAGE) {
+                  target.src = FALLBACK_FLORAL_IMAGE;
+                }
+              }}
               className="w-full h-full object-cover transition-all duration-300"
             />
             {product.is_featured === 1 && (
@@ -126,7 +135,17 @@ export const ProductDetailModal: React.FC<ProductDetailModalProps> = ({ product,
                     selectedImgIndex === idx ? 'border-black ring-1 ring-black scale-102' : 'border-neutral-200 opacity-60 hover:opacity-100'
                   }`}
                 >
-                  <img src={img} alt="" className="w-full h-full object-cover" />
+                  <img
+                    src={img}
+                    alt=""
+                    onError={(e) => {
+                      const target = e.target as HTMLImageElement;
+                      if (target.src !== FALLBACK_FLORAL_IMAGE) {
+                        target.src = FALLBACK_FLORAL_IMAGE;
+                      }
+                    }}
+                    className="w-full h-full object-cover"
+                  />
                 </button>
               ))}
             </div>
@@ -162,11 +181,11 @@ export const ProductDetailModal: React.FC<ProductDetailModalProps> = ({ product,
             {/* Pricing Header */}
             <div className="flex items-baseline gap-3">
               <span className="text-3xl font-semibold text-[#1d1d1f]">
-                ${totalPrice.toFixed(2)}
+                {formatPrice(totalPrice)}
               </span>
               {product.compare_at_price && (
                 <span className="text-sm text-neutral-400 line-through">
-                  ${(product.compare_at_price + sizePricing[selectedSize].extra).toFixed(2)}
+                  {formatPrice(product.compare_at_price + sizePricing[selectedSize].extra)}
                 </span>
               )}
               <span className="text-[11px] bg-neutral-100 text-neutral-700 font-medium px-2.5 py-0.5 rounded-full">
@@ -240,7 +259,7 @@ export const ProductDetailModal: React.FC<ProductDetailModalProps> = ({ product,
                         >
                           <span className="text-xs font-semibold block">{s.label}</span>
                           <span className={`text-[10px] block mt-0.5 ${isSelected ? 'text-neutral-300' : 'text-neutral-400'}`}>
-                            {s.extra === 0 ? 'Standard' : `+$${s.extra.toFixed(2)}`}
+                            {s.extra === 0 ? 'Standard' : `+${formatPrice(s.extra)}`}
                           </span>
                         </button>
                       );
@@ -273,7 +292,7 @@ export const ProductDetailModal: React.FC<ProductDetailModalProps> = ({ product,
                             <span className="text-[11px] truncate">{add.name}</span>
                           </div>
                           <span className="text-[11px] font-semibold text-neutral-900 shrink-0 ml-1">
-                            +${add.price}
+                            +{formatPrice(add.price)}
                           </span>
                         </button>
                       );
@@ -389,7 +408,7 @@ export const ProductDetailModal: React.FC<ProductDetailModalProps> = ({ product,
                 ) : (
                   <>
                     <ShoppingBag className="w-3.5 h-3.5" />
-                    Add to Bag • ${totalPrice.toFixed(2)}
+                    Add to Bag • {formatPrice(totalPrice)}
                   </>
                 )}
               </button>
