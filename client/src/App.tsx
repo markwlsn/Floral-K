@@ -1,7 +1,6 @@
 import React, { useState } from 'react';
 import { AuthProvider } from './context/AuthContext';
 import { CartProvider } from './context/CartContext';
-import { RoleSwitcher } from './components/common/RoleSwitcher';
 import { Navbar } from './components/common/Navbar';
 import { Footer } from './components/common/Footer';
 import { CartDrawer } from './components/storefront/CartDrawer';
@@ -39,10 +38,7 @@ export function AppContent() {
 
   return (
     <div className="min-h-screen flex flex-col bg-[#FCFBF9] text-stone-900 font-sans">
-      {/* 1. Global Role Switcher Bar for Quick Simulation */}
-      <RoleSwitcher currentView={currentView} onNavigate={handleNavigate} />
-
-      {/* 2. Brand Luxury Navbar */}
+      {/* 1. Brand Luxury Navbar */}
       <Navbar
         currentView={currentView}
         onNavigate={handleNavigate}
