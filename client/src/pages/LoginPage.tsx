@@ -22,7 +22,12 @@ export const LoginPage: React.FC<LoginPageProps> = ({ onSuccess }) => {
     const res = await login(email, password);
     setLoading(false);
 
-    if (res.success) {
+    if (res.success && res.user) {
+      if (res.user.role === 'admin') onSuccess('pos');
+      else if (res.user.role === 'owner') onSuccess('owner');
+      else if (res.user.role === 'super_admin') onSuccess('superadmin');
+      else onSuccess('storefront');
+    } else if (res.success) {
       onSuccess('storefront');
     } else {
       setError(res.error || 'Login failed');
