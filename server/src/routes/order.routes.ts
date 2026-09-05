@@ -88,6 +88,15 @@ export function createOrderRouter(db: Database.Database): Router {
         return;
       }
 
+      // Strict Store Pickup Reservation Rule:
+      // Store pickup requires prepaid online payment to prevent florist bouquet ghosting and stem spoilage
+      if (orderType === 'online_pickup' && paymentMethod === 'cod') {
+        res.status(400).json({
+          error: 'In-store pickup requires a prepaid online reservation (QRPH, GCash, Maya, or Card) to guarantee fresh blooms and prevent no-shows.'
+        });
+        return;
+      }
+
       // Fetch store settings for tax and delivery fees
       const taxRateSetting = db.prepare("SELECT value FROM store_settings WHERE key = 'tax_rate'").get() as { value: string } | undefined;
       const deliveryFeeSetting = db.prepare("SELECT value FROM store_settings WHERE key = 'standard_delivery_fee'").get() as { value: string } | undefined;
@@ -169,6 +178,7 @@ export function createOrderRouter(db: Database.Database): Router {
 
         const orderNumber = generateOrderNumber();
         const customerId = req.user ? req.user.id : null;
+        const paymentStatus = paymentMethod === 'cod' ? 'pending' : 'paid';
 
         // Insert Order
         const insertOrderStmt = db.prepare(`
@@ -178,7 +188,7 @@ export function createOrderRouter(db: Database.Database): Router {
             delivery_fee, tax, total, delivery_date, delivery_time_slot,
             recipient_name, recipient_phone, delivery_address, card_message, notes,
             source, created_by_user_id
-          ) VALUES (?, ?, ?, ?, ?, ?, 'pending', 'paid', ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, 'web', ?)
+          ) VALUES (?, ?, ?, ?, ?, ?, 'pending', ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, 'web', ?)
         `);
 
         const orderResult = insertOrderStmt.run(
@@ -188,6 +198,7 @@ export function createOrderRouter(db: Database.Database): Router {
           customerEmail ? customerEmail.trim() : null,
           customerPhone.trim(),
           orderType as OrderType,
+          paymentStatus,
           paymentMethod as PaymentMethod,
           subtotal,
           discountAmount,
