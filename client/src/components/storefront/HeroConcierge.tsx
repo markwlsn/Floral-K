@@ -51,9 +51,9 @@ export const HeroConcierge: React.FC<HeroConciergeProps> = ({ onFindMatch }) => 
 
   const budgets = [
     { key: 'any', label: 'Any Budget' },
-    { key: 'under100', label: 'Under $100' },
-    { key: '100to140', label: '$100 – $140' },
-    { key: 'over140', label: '$140+' },
+    { key: 'under2500', label: 'Under ₱2,500' },
+    { key: '2500to4000', label: '₱2,500 – ₱4,000' },
+    { key: 'over4000', label: '₱4,000+' },
   ];
 
   const handleSubmit = (e: React.FormEvent) => {
@@ -123,7 +123,7 @@ export const HeroConcierge: React.FC<HeroConciergeProps> = ({ onFindMatch }) => 
             <div className="flex flex-wrap items-center gap-6 pt-3 text-xs text-neutral-400">
               <div className="flex items-center gap-1.5">
                 <span className="text-white font-semibold">4.98/5</span>
-                <span>(3,800+ NYC Reviews)</span>
+                <span>(3,800+ Metro Manila Reviews)</span>
               </div>
               <div className="flex items-center gap-1.5 text-neutral-300">
                 <ShieldCheck className="w-3.5 h-3.5 text-neutral-400" />
