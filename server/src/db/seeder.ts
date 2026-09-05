@@ -16,10 +16,10 @@ export function seedDatabase(db: Database.Database): void {
       VALUES (?, ?, ?, ?, ?, 1)
     `);
 
-    insertUser.run('Elena Vance (Super Admin)', 'superadmin@floralk.com', superAdminHash, 'super_admin', '+1 (555) 901-0001');
-    insertUser.run('Klara Kensington (Owner)', 'owner@floralk.com', ownerHash, 'owner', '+1 (555) 901-0002');
-    insertUser.run('Liam Rivera (Lead Florist & Admin)', 'admin@floralk.com', adminHash, 'admin', '+1 (555) 901-0003');
-    insertUser.run('Sophia Miller (Customer)', 'customer@example.com', customerHash, 'customer', '+1 (555) 901-0004');
+    insertUser.run('Elena Vance (Super Admin)', 'superadmin@floralk.com', superAdminHash, 'super_admin', '+63 917 901 0001');
+    insertUser.run('Klara Kensington (Owner)', 'owner@floralk.com', ownerHash, 'owner', '+63 917 901 0002');
+    insertUser.run('Liam Rivera (Lead Florist & Admin)', 'admin@floralk.com', adminHash, 'admin', '+63 917 901 0003');
+    insertUser.run('Sophia Miller (Customer)', 'customer@example.com', customerHash, 'customer', '+63 917 901 0004');
   }
 
   // 2. Seed Categories
@@ -122,17 +122,17 @@ export function seedDatabase(db: Database.Database): void {
         slug: 'the-scarlet-royale',
         sku: 'FK-ROM-001',
         category_id: 1,
-        price: 129.0,
-        compare_at_price: 149.0,
-        cost_price: 45.0,
+        price: 3499.0,
+        compare_at_price: 3999.0,
+        cost_price: 1200.0,
         stock: 35,
         min_stock_alert: 8,
         description: 'Two dozen hand-selected Ecuadorian long-stem scarlet roses nestled in lush salal greens and Italian ruscus, bound with our signature copper silk ribbon. Grown in volcanic microclimates, each bloom boasts dense velvety petals that unfurl with breathtaking symmetry.',
         short_description: '24 Ecuadorian scarlet roses with Italian ruscus & copper silk wrap.',
         images: JSON.stringify([
           'https://images.unsplash.com/photo-1518709268805-4e9042af9f23?auto=format&fit=crop&w=1000&q=80',
-          'https://images.unsplash.com/photo-1548094878-84ced0f68c08?auto=format&fit=crop&w=1000&q=80',
-          'https://images.unsplash.com/photo-1561181286-d3fee7d55364?auto=format&fit=crop&w=1000&q=80'
+          'https://images.unsplash.com/photo-1561181286-d3fee7d55364?auto=format&fit=crop&w=1000&q=80',
+          'https://images.unsplash.com/photo-1582794543139-8ac9cb0f7b11?auto=format&fit=crop&w=1000&q=80'
         ]),
         flower_types: JSON.stringify(['Ecuadorian Red Roses', 'Italian Ruscus', 'Hypericum Berries']),
         occasion_tags: JSON.stringify(['Romance', 'Anniversary', 'Valentine', 'Proposal']),
@@ -150,9 +150,9 @@ export function seedDatabase(db: Database.Database): void {
         slug: 'midnight-velvet-peony-rose',
         sku: 'FK-ROM-002',
         category_id: 1,
-        price: 145.0,
-        compare_at_price: 165.0,
-        cost_price: 52.0,
+        price: 3899.0,
+        compare_at_price: 4499.0,
+        cost_price: 1400.0,
         stock: 18,
         min_stock_alert: 5,
         description: 'Lush Bordeaux garden roses, blush Sarah Bernhardt peonies, and plum ranunculus crowned with trailing dark eucalyptus. Dramatic, seductive, and deeply romantic, this arrangement evokes the quiet grandeur of an evening masquerade.',
@@ -178,9 +178,9 @@ export function seedDatabase(db: Database.Database): void {
         slug: 'golden-hour-citrus-burst',
         sku: 'FK-CEL-001',
         category_id: 2,
-        price: 88.0,
-        compare_at_price: 99.0,
-        cost_price: 28.0,
+        price: 2499.0,
+        compare_at_price: 2899.0,
+        cost_price: 850.0,
         stock: 24,
         min_stock_alert: 6,
         description: 'An effervescent celebration of pure sunshine: radiant coral ranunculus, golden mammoth sunflowers, lemon spray roses, and scented mint foliage. Guaranteed to fill any room with uninhibited optimism.',
@@ -206,16 +206,17 @@ export function seedDatabase(db: Database.Database): void {
         slug: 'pastel-confetti-birthday-bloom',
         sku: 'FK-CEL-002',
         category_id: 2,
-        price: 95.0,
-        compare_at_price: 110.0,
-        cost_price: 32.0,
+        price: 2699.0,
+        compare_at_price: 3199.0,
+        cost_price: 900.0,
         stock: 30,
         min_stock_alert: 5,
         description: 'Soft lavender ocean song roses, powder-pink Dutch cloud hydrangeas, cream delphiniums, and fluttery lisianthus artfully arranged in our recyclable matte ivory gift presentation.',
         short_description: 'Lavender roses, powder-pink hydrangeas & cream delphinium.',
         images: JSON.stringify([
           'https://images.unsplash.com/photo-1563245372-f21724e3856d?auto=format&fit=crop&w=1000&q=80',
-          'https://images.unsplash.com/photo-1525310072745-f49212b5ac6d?auto=format&fit=crop&w=1000&q=80'
+          'https://images.unsplash.com/photo-1525310072745-f49212b5ac6d?auto=format&fit=crop&w=1000&q=80',
+          'https://images.unsplash.com/photo-1520763185298-1b434c919102?auto=format&fit=crop&w=1000&q=80'
         ]),
         flower_types: JSON.stringify(['Lavender Roses', 'Pink Hydrangea', 'Cream Delphinium', 'White Lisianthus']),
         occasion_tags: JSON.stringify(['Birthday', 'Friendship', 'Just Because']),
@@ -233,16 +234,17 @@ export function seedDatabase(db: Database.Database): void {
         slug: 'imperial-double-orchid-planter',
         sku: 'FK-ORC-001',
         category_id: 3,
-        price: 135.0,
-        compare_at_price: 155.0,
-        cost_price: 48.0,
+        price: 4500.0,
+        compare_at_price: 5200.0,
+        cost_price: 1600.0,
         stock: 14,
         min_stock_alert: 4,
         description: 'Twin grand white Phalaenopsis orchid cascades with multiple blooming nodes, potted in living Spanish moss and black glazed ceramic. Lasts 8 to 12 weeks with minimal care, embodying eternal refinement.',
         short_description: 'Double cascade white Phalaenopsis in glazed ceramic.',
         images: JSON.stringify([
           'https://images.unsplash.com/photo-1525310072745-f49212b5ac6d?auto=format&fit=crop&w=1000&q=80',
-          'https://images.unsplash.com/photo-1533616688419-b7a585564566?auto=format&fit=crop&w=1000&q=80'
+          'https://images.unsplash.com/photo-1533616688419-b7a585564566?auto=format&fit=crop&w=1000&q=80',
+          'https://images.unsplash.com/photo-1518709268805-4e9042af9f23?auto=format&fit=crop&w=1000&q=80'
         ]),
         flower_types: JSON.stringify(['Phalaenopsis Orchids', 'Spanish Moss', 'Pebble Dressing']),
         occasion_tags: JSON.stringify(['Housewarming', 'Luxury Gifting', 'Corporate', 'Anniversary']),
@@ -260,16 +262,17 @@ export function seedDatabase(db: Database.Database): void {
         slug: 'kyoto-zen-bonsai-cymbidium',
         sku: 'FK-ORC-002',
         category_id: 3,
-        price: 160.0,
-        compare_at_price: 185.0,
-        cost_price: 58.0,
+        price: 4800.0,
+        compare_at_price: 5500.0,
+        cost_price: 1750.0,
         stock: 10,
         min_stock_alert: 3,
         description: 'A striking union of rare chartreuse Cymbidium orchid spikes, dwarf Japanese juniper bonsai, and lush live cushion moss arranged on a handcrafted basalt slate slab.',
         short_description: 'Rare chartreuse Cymbidium orchid and juniper bonsai on basalt slate.',
         images: JSON.stringify([
-          'https://images.unsplash.com/photo-1545232979-fbf68fe9b1a8?auto=format&fit=crop&w=1000&q=80',
-          'https://images.unsplash.com/photo-1525310072745-f49212b5ac6d?auto=format&fit=crop&w=1000&q=80'
+          'https://images.unsplash.com/photo-1616046229478-9901c5536a45?auto=format&fit=crop&w=1000&q=80',
+          'https://images.unsplash.com/photo-1525310072745-f49212b5ac6d?auto=format&fit=crop&w=1000&q=80',
+          'https://images.unsplash.com/photo-1508615039623-a25605d2b022?auto=format&fit=crop&w=1000&q=80'
         ]),
         flower_types: JSON.stringify(['Green Cymbidium Orchids', 'Juniper Bonsai', 'Cushion Moss']),
         occasion_tags: JSON.stringify(['Executive', 'Housewarming', 'Modernist', 'Zen']),
@@ -287,16 +290,17 @@ export function seedDatabase(db: Database.Database): void {
         slug: 'serene-haven-white-lily-rose',
         sku: 'FK-SYM-001',
         category_id: 4,
-        price: 110.0,
-        compare_at_price: 125.0,
-        cost_price: 36.0,
+        price: 2999.0,
+        compare_at_price: 3499.0,
+        cost_price: 1050.0,
         stock: 22,
         min_stock_alert: 5,
         description: 'Pristine oriental Casablanca lilies, ivory Vendela roses, white snapdragons, and lush salal foliage. A quiet, dignified arrangement that conveys heartfelt sympathy and enduring peace.',
         short_description: 'Casablanca lilies, ivory Vendela roses & snapdragons.',
         images: JSON.stringify([
           'https://images.unsplash.com/photo-1533616688419-b7a585564566?auto=format&fit=crop&w=1000&q=80',
-          'https://images.unsplash.com/photo-1518709268805-4e9042af9f23?auto=format&fit=crop&w=1000&q=80'
+          'https://images.unsplash.com/photo-1518709268805-4e9042af9f23?auto=format&fit=crop&w=1000&q=80',
+          'https://images.unsplash.com/photo-1525310072745-f49212b5ac6d?auto=format&fit=crop&w=1000&q=80'
         ]),
         flower_types: JSON.stringify(['Casablanca Lilies', 'Vendela White Roses', 'Snapdragons', 'Silver Dollar Eucalyptus']),
         occasion_tags: JSON.stringify(['Sympathy', 'Condolences', 'Grace', 'Peace']),
@@ -314,16 +318,17 @@ export function seedDatabase(db: Database.Database): void {
         slug: 'terracotta-dunes-preserved-floral',
         sku: 'FK-DRY-001',
         category_id: 5,
-        price: 85.0,
-        compare_at_price: 95.0,
-        cost_price: 26.0,
+        price: 2299.0,
+        compare_at_price: 2699.0,
+        cost_price: 750.0,
         stock: 28,
         min_stock_alert: 6,
         description: 'Naturally dried bleached Italian ruscus, fluffy sand pampas grass, terracotta bunny tails, and preserved baby’s breath. Requires zero water and maintains its organic sculptured grace for 2+ years.',
         short_description: 'Dried pampas, bleached ruscus & terracotta bunny tails.',
         images: JSON.stringify([
           'https://images.unsplash.com/photo-1508615039623-a25605d2b022?auto=format&fit=crop&w=1000&q=80',
-          'https://images.unsplash.com/photo-1563245372-f21724e3856d?auto=format&fit=crop&w=1000&q=80'
+          'https://images.unsplash.com/photo-1563245372-f21724e3856d?auto=format&fit=crop&w=1000&q=80',
+          'https://images.unsplash.com/photo-1518895949257-7621c3c786d7?auto=format&fit=crop&w=1000&q=80'
         ]),
         flower_types: JSON.stringify(['Pampas Grass', 'Italian Ruscus', 'Bunny Tails', 'Preserved Gypsophila']),
         occasion_tags: JSON.stringify(['Home Decor', 'Birthday', 'Boho Chic', 'Long Lasting']),
@@ -341,16 +346,17 @@ export function seedDatabase(db: Database.Database): void {
         slug: 'nordic-eucalyptus-wild-cotton',
         sku: 'FK-DRY-002',
         category_id: 5,
-        price: 78.0,
-        compare_at_price: 90.0,
-        cost_price: 24.0,
+        price: 1999.0,
+        compare_at_price: 2399.0,
+        cost_price: 650.0,
         stock: 30,
         min_stock_alert: 5,
         description: 'Preserved baby blue eucalyptus stems, organic raw cotton bolls on woody branches, and ivory dried starflowers. A clean, minimalist Scandinavian statement for the modern home.',
         short_description: 'Preserved silver dollar eucalyptus, raw cotton bolls & dried starflowers.',
         images: JSON.stringify([
           'https://images.unsplash.com/photo-1518895949257-7621c3c786d7?auto=format&fit=crop&w=1000&q=80',
-          'https://images.unsplash.com/photo-1508615039623-a25605d2b022?auto=format&fit=crop&w=1000&q=80'
+          'https://images.unsplash.com/photo-1508615039623-a25605d2b022?auto=format&fit=crop&w=1000&q=80',
+          'https://images.unsplash.com/photo-1563245372-f21724e3856d?auto=format&fit=crop&w=1000&q=80'
         ]),
         flower_types: JSON.stringify(['Preserved Eucalyptus', 'Raw Cotton', 'Dried Starflower']),
         occasion_tags: JSON.stringify(['Home Decor', 'Minimalist', 'Housewarming', 'Nordic']),
@@ -368,16 +374,17 @@ export function seedDatabase(db: Database.Database): void {
         slug: 'the-botanist-hamper-petite-bouquet',
         sku: 'FK-BOX-001',
         category_id: 6,
-        price: 155.0,
-        compare_at_price: 180.0,
-        cost_price: 55.0,
+        price: 3950.0,
+        compare_at_price: 4500.0,
+        cost_price: 1500.0,
         stock: 12,
         min_stock_alert: 3,
         description: 'A handcrafted pine keepsake box housing a fresh seasonal pastel posy, a 100% soy Fig & Wild Rose candle, French lavender room mist, and six artisanal macarons from Paris.',
         short_description: 'Curated gift box: fresh posy, soy candle, mist & macarons.',
         images: JSON.stringify([
-          'https://images.unsplash.com/photo-1548094878-84ced0f68c08?auto=format&fit=crop&w=1000&q=80',
-          'https://images.unsplash.com/photo-1508615039623-a25605d2b022?auto=format&fit=crop&w=1000&q=80'
+          'https://images.unsplash.com/photo-1549465220-1a8b9238cd48?auto=format&fit=crop&w=1000&q=80',
+          'https://images.unsplash.com/photo-1508615039623-a25605d2b022?auto=format&fit=crop&w=1000&q=80',
+          'https://images.unsplash.com/photo-1589244159943-460088ed5c92?auto=format&fit=crop&w=1000&q=80'
         ]),
         flower_types: JSON.stringify(['Spray Roses', 'Waxflower', 'Astrantia', 'Eucalyptus']),
         occasion_tags: JSON.stringify(['Self Care', 'Birthday', 'Thank You', 'Luxury Gifting']),
@@ -395,16 +402,17 @@ export function seedDatabase(db: Database.Database): void {
         slug: 'monets-garden-dutch-tulips',
         sku: 'FK-CEL-003',
         category_id: 2,
-        price: 105.0,
-        compare_at_price: 120.0,
-        cost_price: 34.0,
+        price: 2850.0,
+        compare_at_price: 3300.0,
+        cost_price: 950.0,
         stock: 25,
         min_stock_alert: 6,
         description: 'Thirty rare double-flowered peony tulips in delicate gradations of apricot, blush, lilac, and porcelain white. As they open, they reveal voluminous ruffled blooms reminiscent of Impressionist masterworks.',
         short_description: '30 double-bloom French peony tulips in gradient pastel tones.',
         images: JSON.stringify([
           'https://images.unsplash.com/photo-1520763185298-1b434c919102?auto=format&fit=crop&w=1000&q=80',
-          'https://images.unsplash.com/photo-1563245372-f21724e3856d?auto=format&fit=crop&w=1000&q=80'
+          'https://images.unsplash.com/photo-1563245372-f21724e3856d?auto=format&fit=crop&w=1000&q=80',
+          'https://images.unsplash.com/photo-1526047932273-341f2a7631f9?auto=format&fit=crop&w=1000&q=80'
         ]),
         flower_types: JSON.stringify(['Double Peony Tulips', 'Sweet Pea', 'Mint Foliage']),
         occasion_tags: JSON.stringify(['Birthday', 'Spring', 'Mother’s Day', 'Just Because']),
@@ -422,16 +430,17 @@ export function seedDatabase(db: Database.Database): void {
         slug: 'perrier-jouet-white-rose-hatbox',
         sku: 'FK-BOX-002',
         category_id: 6,
-        price: 240.0,
-        compare_at_price: 275.0,
-        cost_price: 95.0,
+        price: 6800.0,
+        compare_at_price: 7800.0,
+        cost_price: 2800.0,
         stock: 8,
         min_stock_alert: 2,
         description: 'Eighteen high-altitude White Explorer roses arranged in a custom velvet-lined circular presentation box, paired with a chilled 750ml bottle of Perrier-Jouët Grand Brut Champagne and 12 Marc de Champagne truffles.',
         short_description: '18 white Explorer roses, 750ml Perrier-Jouët & Marc de Champagne truffles.',
         images: JSON.stringify([
           'https://images.unsplash.com/photo-1518895949257-7621c3c786d7?auto=format&fit=crop&w=1000&q=80',
-          'https://images.unsplash.com/photo-1518709268805-4e9042af9f23?auto=format&fit=crop&w=1000&q=80'
+          'https://images.unsplash.com/photo-1518709268805-4e9042af9f23?auto=format&fit=crop&w=1000&q=80',
+          'https://images.unsplash.com/photo-1549465220-1a8b9238cd48?auto=format&fit=crop&w=1000&q=80'
         ]),
         flower_types: JSON.stringify(['White Explorer Roses', 'Silver Brunia', 'Salal Greens']),
         occasion_tags: JSON.stringify(['VIP Luxury', 'Milestone Anniversary', 'Wedding Gift', 'Congratulations']),
@@ -480,37 +489,38 @@ export function seedDatabase(db: Database.Database): void {
     const insertDisc = db.prepare(`
       INSERT INTO discounts (code, discount_type, value, min_spend, max_uses, used_count, is_active)
       VALUES (?, ?, ?, ?, ?, 0, 1)
+      ON CONFLICT(code) DO UPDATE SET value = excluded.value, min_spend = excluded.min_spend
     `);
 
-    insertDisc.run('FLORAL10', 'percentage', 10.0, 50.0, 500);
-    insertDisc.run('WELCOME20', 'fixed', 20.0, 100.0, 200);
-    insertDisc.run('FREESHIP', 'fixed', 15.0, 75.0, 300);
-    insertDisc.run('VIP15', 'percentage', 15.0, 120.0, 100);
+    insertDisc.run('FLORAL10', 'percentage', 10.0, 1500.0, 500);
+    insertDisc.run('WELCOME500', 'fixed', 500.0, 2500.0, 200);
+    insertDisc.run('FREESHIP', 'fixed', 150.0, 2000.0, 300);
+    insertDisc.run('VIP15', 'percentage', 15.0, 3500.0, 100);
   }
 
-  // 5. Seed Store Settings
-  const settingsCount = db.prepare('SELECT COUNT(*) as count FROM store_settings').get() as { count: number };
-  if (settingsCount.count === 0) {
-    const insertSetting = db.prepare(`
-      INSERT INTO store_settings (key, value)
-      VALUES (?, ?)
-    `);
+  // 5. Seed Store Settings (Always update with Philippine localization)
+  const insertSetting = db.prepare(`
+    INSERT INTO store_settings (key, value)
+    VALUES (?, ?)
+    ON CONFLICT(key) DO UPDATE SET value = excluded.value
+  `);
 
-    insertSetting.run('store_name', 'Floral K Boutique & Atelier');
-    insertSetting.run('store_tagline', 'Bespoke Fresh Blooms & Express Luxury Delivery');
-    insertSetting.run('tax_rate', '0.0825'); // 8.25%
-    insertSetting.run('standard_delivery_fee', '15.00');
-    insertSetting.run('free_delivery_threshold', '120.00');
-    insertSetting.run('store_phone', '+1 (555) 356-7255');
-    insertSetting.run('store_email', 'concierge@floralk.com');
-    insertSetting.run('store_address', '742 Blossom Boulevard, Floral District, New York, NY 10001');
-    insertSetting.run('business_hours', JSON.stringify({
-      monday_friday: '08:00 AM - 07:00 PM',
-      saturday: '09:00 AM - 06:00 PM',
-      sunday: '10:00 AM - 04:00 PM'
-    }));
-    insertSetting.run('pos_receipt_footer', 'Thank you for choosing Floral K! Share your bloom on Instagram @floralk.boutique');
-  }
+  insertSetting.run('store_name', 'Floral K Boutique & Atelier');
+  insertSetting.run('store_tagline', 'Bespoke Fresh Blooms & Express Luxury Delivery in Metro Manila');
+  insertSetting.run('tax_rate', '0.12'); // 12% VAT
+  insertSetting.run('standard_delivery_fee', '150.00'); // ₱150 standard delivery
+  insertSetting.run('free_delivery_threshold', '3000.00'); // ₱3,000 free delivery
+  insertSetting.run('currency', 'PHP');
+  insertSetting.run('currency_symbol', '₱');
+  insertSetting.run('store_phone', '+63 (02) 8812-3567 / 0917-555-BLOOM');
+  insertSetting.run('store_email', 'concierge@floralk.com');
+  insertSetting.run('store_address', 'Floral K Flagship Atelier, 28th Street cor. 7th Avenue, Bonifacio Global City (BGC), Taguig, Metro Manila 1634');
+  insertSetting.run('business_hours', JSON.stringify({
+    monday_friday: '08:00 AM - 08:00 PM PHT',
+    saturday: '09:00 AM - 08:00 PM PHT',
+    sunday: '09:00 AM - 06:00 PM PHT'
+  }));
+  insertSetting.run('pos_receipt_footer', 'Maraming salamat for choosing Floral K! Share your bloom on Instagram @floralk.ph');
 
   // 6. Seed Initial Orders for Kanban & POS Demonstration
   const orderCount = db.prepare('SELECT COUNT(*) as count FROM orders').get() as { count: number };
@@ -530,91 +540,91 @@ export function seedDatabase(db: Database.Database): void {
       VALUES (?, ?, ?, ?, ?, ?, ?, ?)
     `);
 
-    // Order 1: Pending Web Order
+    // Order 1: Pending Web Order (Paid via QRPH)
     const order1 = insertOrder.run(
       'FK-20260905-1001',
       4,
       'Sophia Miller',
       'customer@example.com',
-      '+1 (555) 901-0004',
+      '+63 917 901 0004',
       'online_delivery',
       'pending',
       'paid',
-      'card',
-      129.0,
-      12.9,
+      'qrph',
+      3499.0,
+      349.9,
       0.0,
-      9.58,
-      125.68,
+      377.89,
+      3526.99,
       '2026-09-05',
       '2:00 PM - 5:00 PM',
       'Alexander Wright',
-      '+1 (555) 888-1122',
-      '450 Lexington Ave, Penthouse B, New York, NY',
+      '+63 918 888 1122',
+      'One Serendra, Tower 2, Penthouse B, 11th Ave, BGC, Taguig',
       'Happy 5th Anniversary my love! Forever grateful for every moment with you.',
       'Please leave with building concierge if not home.',
       'web',
       null
     );
 
-    insertItem.run(order1.lastInsertRowid, 1, 'The Scarlet Royale (24 Long-Stem Red Roses)', 'FK-ROM-001', 129.0, 45.0, 1, 129.0);
+    insertItem.run(order1.lastInsertRowid, 1, 'The Scarlet Royale (24 Long-Stem Ecuadorian Red Roses)', 'FK-ROM-001', 3499.0, 1200.0, 1, 3499.0);
 
-    // Order 2: Arranging Florist Order
+    // Order 2: Arranging Florist Order (Paid via GCash)
     const order2 = insertOrder.run(
       'FK-20260905-1002',
       null,
       'Marcus Chen',
       'mchen@techventures.io',
-      '+1 (555) 345-6789',
+      '+63 917 345 6789',
       'online_delivery',
       'arranging',
       'paid',
-      'card',
-      145.0,
+      'gcash',
+      3899.0,
       0.0,
-      15.0,
-      13.20,
-      173.20,
+      0.0,
+      467.88,
+      4366.88,
       '2026-09-05',
       '10:00 AM - 1:00 PM',
       'Chloe Vance',
-      '+1 (555) 234-9988',
-      '88 Pine St, Suite 1400, New York, NY',
+      '+63 917 234 9988',
+      'Park Terraces, Tower 1, Unit 24A, Makati City',
       'Wishing you the happiest birthday Chloe! You inspire all of us.',
       'Call upon arrival.',
       'web',
       null
     );
 
-    insertItem.run(order2.lastInsertRowid, 2, 'Midnight Velvet Peony & Rose Symphony', 'FK-ROM-002', 145.0, 52.0, 1, 145.0);
+    insertItem.run(order2.lastInsertRowid, 2, 'Midnight Velvet (Bordeaux Garden Roses & Sarah Bernhardt Peonies)', 'FK-ROM-002', 3899.0, 1400.0, 1, 3899.0);
 
-    // Order 3: Completed POS Walk-in Sale
+    // Order 3: Completed POS Walk-in Sale (Paid via Cash)
     const order3 = insertOrder.run(
       'FK-20260905-1003',
       null,
-      'Walk-in Customer (Cashier Counter)',
+      'Walk-in Customer (BGC Counter)',
       'walkin@floralk.com',
-      '+1 (555) 000-1111',
+      '+63 917 000 1111',
       'pos_walkin',
       'delivered',
       'paid',
       'cash',
-      88.0,
+      2499.0,
       0.0,
       0.0,
-      7.26,
-      95.26,
+      299.88,
+      2798.88,
       '2026-09-05',
       'Immediate Walk-in',
       'Walk-in Customer',
-      '+1 (555) 000-1111',
-      'Floral K Boutique Storefront',
+      '+63 917 000 1111',
+      'Floral K BGC Flagship Atelier',
       'N/A - Direct POS Purchase',
-      'Cash tendered: $100.00, Change: $4.74',
+      'Cash tendered: ₱3,000.00, Change: ₱201.12',
       'pos',
       3
     );
 
-    insertItem.run(order3.lastInsertRowid, 3, 'Golden Hour Citrus Burst', 'FK-CEL-001', 88.0, 28.0, 1, 88.0);
+    insertItem.run(order3.lastInsertRowid, 3, 'Golden Hour Radiance (California Sunflowers & Coral Ranunculus)', 'FK-CEL-001', 2499.0, 850.0, 1, 2499.0);
   }
 }
