@@ -265,30 +265,30 @@ export const SuperAdminPage: React.FC = () => {
 
           <form onSubmit={handleSaveSettings} className="grid grid-cols-1 sm:grid-cols-3 gap-4 text-xs">
             <div>
-              <label className="font-medium text-[#1d1d1f] block mb-1.5">Tax Rate (e.g. 0.0825 for 8.25%)</label>
+              <label className="font-medium text-[#1d1d1f] block mb-1.5">Tax Rate (e.g. 0.12 for 12% EVAT)</label>
               <input
                 type="text"
-                value={storeSettings.tax_rate || '0.0825'}
+                value={storeSettings.tax_rate || '0.12'}
                 onChange={(e) => setStoreSettings({ ...storeSettings, tax_rate: e.target.value })}
                 className="w-full p-2.5 border border-neutral-200/80 rounded-xl bg-[#f5f5f7] font-mono text-[#1d1d1f] focus:bg-white focus:outline-none focus:ring-1 focus:ring-black"
               />
             </div>
 
             <div>
-              <label className="font-medium text-[#1d1d1f] block mb-1.5">Standard Delivery Fee ($)</label>
+              <label className="font-medium text-[#1d1d1f] block mb-1.5">Standard Delivery Fee (₱)</label>
               <input
                 type="text"
-                value={storeSettings.standard_delivery_fee || '15.00'}
+                value={storeSettings.standard_delivery_fee || '150.00'}
                 onChange={(e) => setStoreSettings({ ...storeSettings, standard_delivery_fee: e.target.value })}
                 className="w-full p-2.5 border border-neutral-200/80 rounded-xl bg-[#f5f5f7] font-mono text-[#1d1d1f] focus:bg-white focus:outline-none focus:ring-1 focus:ring-black"
               />
             </div>
 
             <div>
-              <label className="font-medium text-[#1d1d1f] block mb-1.5">Free Delivery Threshold ($)</label>
+              <label className="font-medium text-[#1d1d1f] block mb-1.5">Free Delivery Threshold (₱)</label>
               <input
                 type="text"
-                value={storeSettings.free_delivery_threshold || '120.00'}
+                value={storeSettings.free_delivery_threshold || '3000.00'}
                 onChange={(e) => setStoreSettings({ ...storeSettings, free_delivery_threshold: e.target.value })}
                 className="w-full p-2.5 border border-neutral-200/80 rounded-xl bg-[#f5f5f7] font-mono text-[#1d1d1f] focus:bg-white focus:outline-none focus:ring-1 focus:ring-black"
               />
