@@ -1,6 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import { useAuth } from '../context/AuthContext';
 import type { Order, OrderStatus } from '../types';
+import { formatPrice } from '../utils/format';
 import {
   Kanban,
   Printer,
@@ -9,7 +10,14 @@ import {
   Gift,
   CheckCircle,
   Clock,
-  Sparkles
+  Sparkles,
+  Store,
+  Truck,
+  Building2,
+  QrCode,
+  Smartphone,
+  CreditCard,
+  Banknote
 } from 'lucide-react';
 
 export const AdminOrdersPage: React.FC = () => {
@@ -62,7 +70,7 @@ export const AdminOrdersPage: React.FC = () => {
   const columns: { status: OrderStatus; title: string; color: string; next?: OrderStatus; nextLabel?: string }[] = [
     { status: 'pending', title: '1. New Orders', color: 'border-amber-400 bg-amber-50/50', next: 'arranging', nextLabel: 'Start Studio Arranging' },
     { status: 'arranging', title: '2. In Studio Assembly', color: 'border-indigo-400 bg-indigo-50/50', next: 'ready_for_pickup', nextLabel: 'Quality Check & Ready' },
-    { status: 'ready_for_pickup', title: '3. Ready for Dispatch', color: 'border-blue-400 bg-blue-50/50', next: 'out_for_delivery', nextLabel: 'Hand to Courier' },
+    { status: 'ready_for_pickup', title: '3. Ready for Dispatch', color: 'border-blue-400 bg-blue-50/50', next: 'out_for_delivery', nextLabel: 'Hand to Courier / Pickup' },
     { status: 'out_for_delivery', title: '4. Out for Delivery', color: 'border-purple-400 bg-purple-50/50', next: 'delivered', nextLabel: 'Confirm Delivered' },
     { status: 'delivered', title: '5. Completed & Delivered', color: 'border-emerald-500 bg-emerald-50/50' }
   ];
@@ -71,6 +79,19 @@ export const AdminOrdersPage: React.FC = () => {
     if (sourceFilter === 'all') return true;
     return o.source === sourceFilter;
   });
+
+  const renderPaymentBadge = (method: string, status: string) => {
+    const isPaid = status === 'paid';
+    return (
+      <span className={`text-[9px] font-medium px-2 py-0.5 rounded-full inline-flex items-center gap-1 ${
+        isPaid ? 'bg-emerald-50 text-emerald-800 border border-emerald-200' : 'bg-amber-50 text-amber-800 border border-amber-200'
+      }`}>
+        <span className={`w-1.5 h-1.5 rounded-full ${isPaid ? 'bg-emerald-500' : 'bg-amber-500'}`} />
+        <span className="uppercase">{method}</span>
+        <span>• {isPaid ? 'Paid' : 'Pending'}</span>
+      </span>
+    );
+  };
 
   return (
     <div className="min-h-screen bg-[#fbfbfd] p-4 sm:p-6 lg:p-8">
@@ -172,72 +193,86 @@ export const AdminOrdersPage: React.FC = () => {
                         No orders in this phase
                       </div>
                     ) : (
-                      colOrders.map((ord) => (
-                        <div
-                          key={ord.id}
-                          className="bg-white p-3.5 rounded-2xl border border-neutral-200/80 shadow-xs hover:border-black/20 hover:shadow-md transition-all space-y-2.5"
-                        >
-                          <div className="flex items-start justify-between gap-1.5">
-                            <div>
-                              <span className="text-[10px] font-mono text-[#86868b] tracking-wider uppercase block">
-                                {ord.order_number}
-                              </span>
-                              <h5 className="font-semibold text-xs text-[#1d1d1f] mt-0.5">
-                                {ord.recipient_name || ord.customer_name}
-                              </h5>
+                      colOrders.map((ord) => {
+                        const isPickup = ord.order_type === 'online_pickup';
+                        return (
+                          <div
+                            key={ord.id}
+                            className="bg-white p-3.5 rounded-2xl border border-neutral-200/80 shadow-xs hover:border-black/20 hover:shadow-md transition-all space-y-2.5"
+                          >
+                            <div className="flex items-start justify-between gap-1.5">
+                              <div>
+                                <span className="text-[10px] font-mono text-[#86868b] tracking-wider uppercase block">
+                                  {ord.order_number}
+                                </span>
+                                <h5 className="font-semibold text-xs text-[#1d1d1f] mt-0.5">
+                                  {ord.recipient_name || ord.customer_name}
+                                </h5>
+                              </div>
+
+                              <div className="flex flex-col items-end gap-1">
+                                <span className="text-[9px] font-semibold uppercase tracking-wider px-2 py-0.5 rounded-full bg-neutral-100 text-neutral-600 border border-neutral-200/60">
+                                  {ord.source.toUpperCase()}
+                                </span>
+                                <span className={`text-[9px] font-semibold px-2 py-0.5 rounded-full ${
+                                  isPickup ? 'bg-amber-100 text-amber-900' : 'bg-blue-100 text-blue-900'
+                                }`}>
+                                  {isPickup ? 'Store Pickup' : 'Chilled Courier'}
+                                </span>
+                              </div>
                             </div>
 
-                            <span className="text-[9px] font-semibold uppercase tracking-wider px-2 py-0.5 rounded-full bg-neutral-100 text-neutral-600 border border-neutral-200/60">
-                              {ord.source.toUpperCase()}
-                            </span>
-                          </div>
-
-                          {/* Items summary */}
-                          {ord.items && ord.items.length > 0 && (
-                            <div className="p-2.5 bg-[#f5f5f7] rounded-xl text-[11px] space-y-1">
-                              {ord.items.map((it, idx) => (
-                                <div key={idx} className="flex justify-between font-medium text-[#1d1d1f]">
-                                  <span className="truncate max-w-[130px]">{it.quantity}x {it.product_name}</span>
-                                </div>
-                              ))}
-                            </div>
-                          )}
-
-                          {/* Card message snippet if present */}
-                          {ord.card_message && (
-                            <div className="text-[10px] text-neutral-700 bg-amber-50/50 p-2.5 rounded-xl border border-amber-200/50 line-clamp-2 italic">
-                              "{ord.card_message}"
-                            </div>
-                          )}
-
-                          <div className="text-[10px] text-[#86868b] space-y-0.5 pt-1.5 border-t border-neutral-100">
-                            <p>Slot: <strong className="text-[#1d1d1f] font-medium">{ord.delivery_time_slot || 'Standard Dispatch'}</strong></p>
-                            <p className="truncate">Addr: {ord.delivery_address || 'Store Pickup'}</p>
-                            <p className="font-semibold text-[#1d1d1f] text-xs pt-0.5">Total: ${ord.total.toFixed(2)}</p>
-                          </div>
-
-                          {/* Actions: Print Florist Slip & Advance Status */}
-                          <div className="flex items-center gap-1.5 pt-1">
-                            <button
-                              onClick={() => setSelectedOrderForSlip(ord)}
-                              className="p-2 text-[#86868b] hover:text-[#1d1d1f] border border-neutral-200/80 rounded-full bg-white hover:bg-neutral-50 transition-colors cursor-pointer shadow-2xs"
-                              title="Print Florist Arrangement Work Slip"
-                            >
-                              <Printer className="w-3.5 h-3.5" />
-                            </button>
-
-                            {col.next && (
-                              <button
-                                onClick={() => handleAdvanceStatus(ord.id, col.next!)}
-                                className="flex-1 py-1.5 px-3 bg-[#1d1d1f] hover:bg-black text-white font-medium text-[10px] rounded-full shadow-xs flex items-center justify-center gap-1 transition-all cursor-pointer"
-                              >
-                                <span>{col.nextLabel}</span>
-                                <ChevronRight className="w-3 h-3 text-neutral-400" />
-                              </button>
+                            {/* Items summary */}
+                            {ord.items && ord.items.length > 0 && (
+                              <div className="p-2.5 bg-[#f5f5f7] rounded-xl text-[11px] space-y-1">
+                                {ord.items.map((it, idx) => (
+                                  <div key={idx} className="flex justify-between font-medium text-[#1d1d1f]">
+                                    <span className="truncate max-w-[130px]">{it.quantity}x {it.product_name}</span>
+                                    <span className="text-[10px] text-neutral-500 font-mono">{formatPrice(it.unit_price * it.quantity)}</span>
+                                  </div>
+                                ))}
+                              </div>
                             )}
+
+                            {/* Card message snippet if present */}
+                            {ord.card_message && (
+                              <div className="text-[10px] text-neutral-700 bg-amber-50/50 p-2.5 rounded-xl border border-amber-200/50 line-clamp-2 italic">
+                                &ldquo;{ord.card_message}&rdquo;
+                              </div>
+                            )}
+
+                            <div className="text-[10px] text-[#86868b] space-y-1 pt-1.5 border-t border-neutral-100">
+                              <div className="flex items-center justify-between">
+                                <span>Slot: <strong className="text-[#1d1d1f] font-medium">{ord.delivery_time_slot || 'Standard Dispatch'}</strong></span>
+                                {renderPaymentBadge(ord.payment_method, ord.payment_status)}
+                              </div>
+                              <p className="truncate">Addr: {ord.delivery_address || 'Store Pickup'}</p>
+                              <p className="font-semibold text-[#1d1d1f] text-xs pt-0.5">Total: {formatPrice(ord.total)}</p>
+                            </div>
+
+                            {/* Actions: Print Florist Slip & Advance Status */}
+                            <div className="flex items-center gap-1.5 pt-1">
+                              <button
+                                onClick={() => setSelectedOrderForSlip(ord)}
+                                className="p-2 text-[#86868b] hover:text-[#1d1d1f] border border-neutral-200/80 rounded-full bg-white hover:bg-neutral-50 transition-colors cursor-pointer shadow-2xs"
+                                title="Print Florist Arrangement Work Slip"
+                              >
+                                <Printer className="w-3.5 h-3.5" />
+                              </button>
+
+                              {col.next && (
+                                <button
+                                  onClick={() => handleAdvanceStatus(ord.id, col.next!)}
+                                  className="flex-1 py-1.5 px-3 bg-[#1d1d1f] hover:bg-black text-white font-medium text-[10px] rounded-full shadow-xs flex items-center justify-center gap-1 transition-all cursor-pointer"
+                                >
+                                  <span>{col.nextLabel}</span>
+                                  <ChevronRight className="w-3 h-3 text-neutral-400" />
+                                </button>
+                              )}
+                            </div>
                           </div>
-                        </div>
-                      ))
+                        );
+                      })
                     )}
                   </div>
                 </div>
@@ -268,11 +303,12 @@ export const AdminOrdersPage: React.FC = () => {
               <div className="text-center pb-3 border-b border-dashed border-neutral-300">
                 <h4 className="font-sans font-semibold text-sm text-[#1d1d1f] tracking-tight">FLORAL K STUDIO RECIPE TICKET</h4>
                 <p className="text-[10px] text-[#86868b] mt-0.5">Order Ref: {selectedOrderForSlip.order_number}</p>
+                <p className="text-[10px] text-[#86868b]">Fulfillment: {selectedOrderForSlip.order_type === 'online_pickup' ? 'Store Pickup Atelier' : 'Chilled Courier Metro Manila'}</p>
                 <p className="text-[10px] text-[#86868b]">Delivery Slot: {selectedOrderForSlip.delivery_time_slot || 'Today Express'}</p>
               </div>
 
               <div>
-                <span className="text-[10px] font-semibold uppercase tracking-wider text-[#86868b] block mb-0.5">Recipient & Address:</span>
+                <span className="text-[10px] font-semibold uppercase tracking-wider text-[#86868b] block mb-0.5">Recipient & Destination:</span>
                 <p className="font-semibold text-[#1d1d1f] font-sans">{selectedOrderForSlip.recipient_name || selectedOrderForSlip.customer_name}</p>
                 <p className="text-neutral-600 font-sans text-[11px]">{selectedOrderForSlip.delivery_address}</p>
                 <p className="text-[#86868b] font-sans text-[10px]">Phone: {selectedOrderForSlip.recipient_phone || selectedOrderForSlip.customer_phone}</p>
@@ -283,7 +319,7 @@ export const AdminOrdersPage: React.FC = () => {
                 {selectedOrderForSlip.items?.map((it, idx) => (
                   <div key={idx} className="flex justify-between font-medium text-[#1d1d1f]">
                     <span>{it.quantity}x {it.product_name}</span>
-                    <span className="text-neutral-500">SKU: {it.product_sku}</span>
+                    <span className="text-neutral-500 font-mono">{formatPrice(it.unit_price * it.quantity)}</span>
                   </div>
                 ))}
               </div>
@@ -293,13 +329,23 @@ export const AdminOrdersPage: React.FC = () => {
                   Gift Note (To be handwritten in gold ink):
                 </span>
                 <p className="font-serif italic text-sm text-[#1d1d1f] p-3 bg-white rounded-xl border border-neutral-200">
-                  "{selectedOrderForSlip.card_message || 'Complimentary Signature Card'}"
+                  &ldquo;{selectedOrderForSlip.card_message || 'Complimentary Signature Card'}&rdquo;
                 </p>
               </div>
 
-              <div className="pt-2 border-t border-dashed border-neutral-300 text-[10px] text-[#86868b] flex items-center justify-between font-sans">
-                <span>Quality Check: Verified fresh cut</span>
-                <span>Signature Wax Seal: Applied</span>
+              <div className="pt-2 border-t border-dashed border-neutral-300 text-[10px] text-[#86868b] space-y-1 font-sans">
+                <div className="flex justify-between">
+                  <span>Payment Tender:</span>
+                  <span className="font-semibold text-[#1d1d1f] uppercase">{selectedOrderForSlip.payment_method} ({selectedOrderForSlip.payment_status})</span>
+                </div>
+                <div className="flex justify-between">
+                  <span>Total Amount:</span>
+                  <span className="font-semibold text-[#1d1d1f]">{formatPrice(selectedOrderForSlip.total)}</span>
+                </div>
+                <div className="flex justify-between pt-1">
+                  <span>Quality Check: Verified fresh cut</span>
+                  <span>Wax Seal: Enclosed</span>
+                </div>
               </div>
             </div>
 
