@@ -9,11 +9,11 @@ interface ToastData {
 }
 
 const SAMPLE_TOASTS: ToastData[] = [
-  { name: 'Emily S.', location: 'Brooklyn, NY', item: 'The Scarlet Royale (24 Red Roses)', timeAgo: '2 mins ago' },
-  { name: 'Alexander W.', location: 'Upper East Side, NY', item: 'Midnight Velvet Peony & Rose Symphony', timeAgo: '5 mins ago' },
-  { name: 'Chloe V.', location: 'Tribeca, NY', item: 'The Imperial Double Orchid Planter', timeAgo: '8 mins ago' },
-  { name: 'Marcus C.', location: 'SoHo, NY', item: 'Golden Hour Citrus Burst', timeAgo: '12 mins ago' },
-  { name: 'Isabella M.', location: 'Greenwich Village, NY', item: 'The Botanist Hamper & Posy Box', timeAgo: '15 mins ago' },
+  { name: 'Maria C.', location: 'Bonifacio Global City, Taguig', item: 'The Scarlet Royale (24 Red Roses)', timeAgo: '2 mins ago' },
+  { name: 'Gabriel P.', location: 'Salcedo Village, Makati', item: 'Midnight Velvet Peony & Rose Symphony', timeAgo: '5 mins ago' },
+  { name: 'Bea R.', location: 'Ayala Alabang, Muntinlupa', item: 'The Imperial Double Orchid Planter', timeAgo: '8 mins ago' },
+  { name: 'Kristian D.', location: 'Ortigas Center, Pasig', item: 'Golden Hour Citrus Burst', timeAgo: '12 mins ago' },
+  { name: 'Patricia M.', location: 'New Manila, Quezon City', item: 'The Botanist Hamper & Posy Box', timeAgo: '15 mins ago' },
 ];
 
 export const SocialProofToast: React.FC = () => {
