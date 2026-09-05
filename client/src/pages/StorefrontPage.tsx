@@ -60,9 +60,9 @@ export const StorefrontPage: React.FC<StorefrontPageProps> = ({
 
   const handleConciergeMatch = (occasion: string, budget: string) => {
     setSelectedOccasion(occasion);
-    if (budget === 'under100') {
+    if (budget === 'under2500') {
       setSortBy('price_asc');
-    } else if (budget === 'over140') {
+    } else if (budget === 'over4000') {
       setSortBy('price_desc');
     }
     // Smooth scroll to catalog
