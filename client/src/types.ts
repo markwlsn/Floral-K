@@ -78,7 +78,7 @@ export interface Order {
   order_type: 'online_delivery' | 'online_pickup' | 'pos_walkin';
   status: OrderStatus;
   payment_status: 'pending' | 'paid' | 'refunded' | 'failed';
-  payment_method: 'cash' | 'card' | 'digital_wallet' | 'cod';
+  payment_method: 'cash' | 'card' | 'digital_wallet' | 'cod' | 'qrph' | 'gcash' | 'maya';
   subtotal: number;
   discount: number;
   delivery_fee: number;
