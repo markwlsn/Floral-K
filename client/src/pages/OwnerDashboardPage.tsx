@@ -1,6 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import { useAuth } from '../context/AuthContext';
 import type { Discount } from '../types';
+import { formatPrice } from '../utils/format';
 import {
   TrendingUp,
   Award,
@@ -26,7 +27,7 @@ export const OwnerDashboardPage: React.FC = () => {
   const [newCode, setNewCode] = useState('');
   const [newType, setNewType] = useState<'percentage' | 'fixed'>('percentage');
   const [newValue, setNewValue] = useState('15');
-  const [newMinSpend, setNewMinSpend] = useState('80');
+  const [newMinSpend, setNewMinSpend] = useState('2000');
   const [promoError, setPromoError] = useState('');
 
   const fetchAnalytics = () => {
@@ -106,7 +107,7 @@ export const OwnerDashboardPage: React.FC = () => {
     );
   }
 
-  // Simulated hourly rush hour pattern
+  // Hourly rush hour pattern
   const rushHours = [
     { hour: '8am', orders: 2, height: '30%' },
     { hour: '10am', orders: 5, height: '65%' },
@@ -125,13 +126,13 @@ export const OwnerDashboardPage: React.FC = () => {
           <div>
             <div className="inline-flex items-center gap-1.5 px-3 py-1 rounded-full bg-neutral-100 text-neutral-800 text-[11px] font-medium">
               <TrendingUp className="w-3.5 h-3.5 text-neutral-600" />
-              <span>Executive Financial Overview</span>
+              <span>Executive Financial Overview • Manila, Philippines</span>
             </div>
             <h1 className="text-2xl sm:text-3xl font-semibold tracking-tight text-[#1d1d1f] mt-1.5">
               Owner Business Dashboard
             </h1>
             <p className="text-xs text-[#86868b] mt-0.5">
-              High-level profitability, sales channels, revenue performance, and campaign controls.
+              High-level profitability, sales channels, revenue performance, and campaign controls in Philippine Pesos (PHP).
             </p>
           </div>
 
@@ -151,11 +152,11 @@ export const OwnerDashboardPage: React.FC = () => {
               Gross Revenue (Paid)
             </span>
             <div className="flex items-baseline justify-between">
-              <span className="font-mono text-2xl font-semibold text-[#1d1d1f]">
-                ${overview.grossRevenue.toFixed(2)}
+              <span className="font-mono text-xl sm:text-2xl font-semibold text-[#1d1d1f]">
+                {formatPrice(overview.grossRevenue)}
               </span>
               <span className="text-[11px] font-medium text-emerald-700 bg-emerald-50 px-2.5 py-0.5 rounded-full">
-                Today: ${overview.todayRevenue.toFixed(2)}
+                Today: {formatPrice(overview.todayRevenue)}
               </span>
             </div>
             <p className="text-[11px] text-[#86868b]">Includes Web & Counter POS orders</p>
@@ -183,11 +184,11 @@ export const OwnerDashboardPage: React.FC = () => {
               Average Order Value (AOV)
             </span>
             <div className="flex items-baseline justify-between">
-              <span className="font-mono text-2xl font-semibold text-[#1d1d1f]">
-                ${overview.averageOrderValue.toFixed(2)}
+              <span className="font-mono text-xl sm:text-2xl font-semibold text-[#1d1d1f]">
+                {formatPrice(overview.averageOrderValue)}
               </span>
               <span className="text-[11px] font-medium text-neutral-600 bg-neutral-100 px-2.5 py-0.5 rounded-full">
-                Target: $110
+                Target: ₱3,500
               </span>
             </div>
             <p className="text-[11px] text-[#86868b]">Premium bouquet bundle average</p>
@@ -199,14 +200,14 @@ export const OwnerDashboardPage: React.FC = () => {
               Gross Profit & Margin
             </span>
             <div className="flex items-baseline justify-between">
-              <span className="font-mono text-2xl font-semibold text-[#1d1d1f]">
-                ${overview.grossProfit.toFixed(2)}
+              <span className="font-mono text-xl sm:text-2xl font-semibold text-[#1d1d1f]">
+                {formatPrice(overview.grossProfit)}
               </span>
               <span className="text-[11px] font-medium text-emerald-800 bg-emerald-100 px-2.5 py-0.5 rounded-full">
                 {overview.profitMarginPercent}% Margin
               </span>
             </div>
-            <p className="text-[11px] text-[#86868b]">COGS Deducted: ${overview.totalCogs.toFixed(2)}</p>
+            <p className="text-[11px] text-[#86868b]">COGS Deducted: {formatPrice(overview.totalCogs)}</p>
           </div>
         </div>
 
@@ -231,7 +232,7 @@ export const OwnerDashboardPage: React.FC = () => {
                         {isWeb ? <Globe className="w-4 h-4 text-neutral-600" /> : <Store className="w-4 h-4 text-neutral-600" />}
                         {isWeb ? 'Online Web Storefront' : 'In-Store Walk-in POS'}
                       </span>
-                      <span className="font-mono font-medium text-[#1d1d1f]">${src.revenue.toFixed(2)}</span>
+                      <span className="font-mono font-medium text-[#1d1d1f]">{formatPrice(src.revenue)}</span>
                     </div>
                     <div className="w-full bg-neutral-200/80 h-1.5 rounded-full overflow-hidden">
                       <div
@@ -290,7 +291,7 @@ export const OwnerDashboardPage: React.FC = () => {
                     </div>
 
                     <div className="text-right">
-                      <span className="font-mono font-medium text-[#1d1d1f] block">${p.total_revenue_generated.toFixed(2)}</span>
+                      <span className="font-mono font-medium text-[#1d1d1f] block">{formatPrice(p.total_revenue_generated)}</span>
                       <span className="text-[10px] text-[#86868b]">{p.total_quantity_sold} sold</span>
                     </div>
                   </div>
@@ -308,7 +309,7 @@ export const OwnerDashboardPage: React.FC = () => {
               <Tag className="w-4 h-4 text-neutral-600" /> Active Marketing Promotional Codes
             </h3>
             <p className="text-xs text-[#86868b] mt-0.5">
-              Discount codes applied by customers during express checkout.
+              Discount codes applied by customers during Philippine express checkout.
             </p>
           </div>
 
@@ -331,9 +332,9 @@ export const OwnerDashboardPage: React.FC = () => {
                     <td className="p-3 font-mono font-semibold text-[#1d1d1f]">{d.code}</td>
                     <td className="p-3 capitalize">{d.discount_type}</td>
                     <td className="p-3 font-medium text-[#1d1d1f]">
-                      {d.discount_type === 'percentage' ? `${d.value}% Off` : `$${d.value.toFixed(2)} Off`}
+                      {d.discount_type === 'percentage' ? `${d.value}% Off` : `${formatPrice(d.value)} Off`}
                     </td>
-                    <td className="p-3">${d.min_spend.toFixed(2)}</td>
+                    <td className="p-3">{formatPrice(d.min_spend)}</td>
                     <td className="p-3 font-mono text-[#86868b]">{d.used_count} times</td>
                     <td className="p-3">
                       <span className={`inline-flex items-center gap-1 font-medium text-[11px] px-2.5 py-0.5 rounded-full ${
@@ -396,14 +397,14 @@ export const OwnerDashboardPage: React.FC = () => {
                     className="w-full p-2.5 border border-neutral-200/80 rounded-xl bg-[#f5f5f7] text-[#1d1d1f] focus:bg-white focus:outline-none focus:ring-1 focus:ring-black"
                   >
                     <option value="percentage">Percentage (%)</option>
-                    <option value="fixed">Fixed Dollar ($)</option>
+                    <option value="fixed">Fixed Peso (₱)</option>
                   </select>
                 </div>
                 <div>
                   <label className="font-medium text-[#1d1d1f] block mb-1.5">Value</label>
                   <input
                     type="number"
-                    step="0.1"
+                    step="1"
                     required
                     value={newValue}
                     onChange={(e) => setNewValue(e.target.value)}
@@ -413,7 +414,7 @@ export const OwnerDashboardPage: React.FC = () => {
               </div>
 
               <div>
-                <label className="font-medium text-[#1d1d1f] block mb-1.5">Minimum Spend ($)</label>
+                <label className="font-medium text-[#1d1d1f] block mb-1.5">Minimum Spend (₱)</label>
                 <input
                   type="number"
                   step="1"
