@@ -10,8 +10,8 @@ const mockProduct: Product = {
   slug: 'scarlet-royale',
   sku: 'FK-ROM-001',
   category_id: 1,
-  price: 129.0,
-  cost_price: 45.0,
+  price: 3500.0,
+  cost_price: 1200.0,
   stock: 20,
   min_stock_alert: 5,
   description: 'Two dozen scarlet roses',
@@ -39,7 +39,7 @@ const TestCartConsumer: React.FC = () => {
 };
 
 describe('CartContext & Calculations', () => {
-  it('adds items, updates subtotal, and qualifies for free express delivery over $120', async () => {
+  it('adds items, updates subtotal, and qualifies for free express delivery over ₱3,000', async () => {
     render(
       <CartProvider>
         <TestCartConsumer />
@@ -48,22 +48,22 @@ describe('CartContext & Calculations', () => {
 
     const addButton = screen.getByText('Add Once');
 
-    // Add Scarlet Royale ($129.00)
+    // Add Scarlet Royale (₱3,500.00)
     act(() => {
       addButton.click();
     });
 
     expect(screen.getByTestId('item-count')).toHaveTextContent('1');
-    expect(screen.getByTestId('subtotal')).toHaveTextContent('129.00');
+    expect(screen.getByTestId('subtotal')).toHaveTextContent('3500.00');
 
-    // Since $129.00 >= $120.00 free delivery threshold, delivery fee is 0.00!
+    // Since ₱3,500 >= ₱3,000 free delivery threshold, delivery fee is 0.00!
     expect(screen.getByTestId('delivery-fee')).toHaveTextContent('0.00');
 
-    // Tax is 8.25% of 129.00 = 10.64
-    expect(screen.getByTestId('tax')).toHaveTextContent('10.64');
+    // Tax is 12% EVAT of 3500.00 = 420.00
+    expect(screen.getByTestId('tax')).toHaveTextContent('420.00');
 
-    // Total = 129.00 + 10.64 = 139.64
-    expect(screen.getByTestId('total')).toHaveTextContent('139.64');
+    // Total = 3500.00 + 420.00 = 3920.00
+    expect(screen.getByTestId('total')).toHaveTextContent('3920.00');
   });
 
   it('updates handwritten card message preview state', () => {
