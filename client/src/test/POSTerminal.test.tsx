@@ -115,19 +115,19 @@ describe('POS Terminal & Counter Register', () => {
 
     // Check ticket updates
     await waitFor(() => {
-      // Subtotal line or product contains $129.00
-      expect(screen.getAllByText('$129.00').length).toBeGreaterThanOrEqual(2);
-      // Total with 8.25% tax ($10.64) = $139.64
-      expect(screen.getByText('$139.64')).toBeInTheDocument();
+      // Subtotal line or product contains ₱129.00
+      expect(screen.getAllByText('₱129.00').length).toBeGreaterThanOrEqual(2);
+      // Total with 12% EVAT (₱15.48) = ₱144.48
+      expect(screen.getByText('₱144.48')).toBeInTheDocument();
     });
 
     // Test Cash Tender change due calculation
     const tenderInput = container.querySelector('input[type="number"]') as HTMLInputElement;
-    fireEvent.change(tenderInput, { target: { value: '150' } });
+    fireEvent.change(tenderInput, { target: { value: '200' } });
 
-    // Change Due should be 150 - 139.64 = 10.36
+    // Change Due should be 200 - 144.48 = 55.52
     await waitFor(() => {
-      expect(screen.getByText('$10.36')).toBeInTheDocument();
+      expect(screen.getByText('₱55.52')).toBeInTheDocument();
     });
   });
 });
